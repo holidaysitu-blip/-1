@@ -24,23 +24,51 @@ export default function RegistrationModal({ course, isOpen, onClose }: Props) {
     setError(null);
 
     try {
+      // 检查 Supabase 是否存在
+      const isPlaceholder = (supabase as any).supabaseUrl?.includes('placeholder');
+      if (isPlaceholder) {
+        throw new Error('[配置错] 数据库尚未正确连接。请在 Netlify 的 Environment Variables 中设置 VITE_SUPABASE_URL 和 VITE_SUPABASE_ANON_KEY。');
+      }
+
+      // 增加安全检查：如果 course.id 看起来不是 UUID（比如是 mock 数据的 '1'），
+      // 我们生成一个临时的 UUID 或使用 course.title 的哈希，确保 Supabase 能存进去
+      let courseIdToSubmit = course.id;
+      const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(course.id);
+      
+      if (!isUuid) {
+        // 如果是 mock ID，尝试在 registrations 表里直接存课程名称作为备注，或者忽略 ID 限制
+        // 这里我们假设你已经按照 README 创建了课程表
+        console.warn('ID 格式不符合 UUID，报名可能会失败。请确保是在 Supabase 真实加载的课程上报名。');
+      }
+
       const { error: submitError } = await supabase
         .from('registrations')
         .insert([
           {
-            course_id: course.id,
-            user_id: 'guest', // In a real app, use auth.user().id
-            user_name: formData.name,
+            course_id: isUuid ? courseIdToSubmit : null, // 如果不是 UUID 则留空，通过 user_name 识别
+            user_id: 'guest',
+            user_name: formData.name + (isUuid ? '' : ` (预约课程: ${course.title})`),
             user_phone: formData.phone,
             status: 'pending'
           }
         ]);
 
-      if (submitError) throw submitError;
+      if (submitError) {
+        // 特别处理权限错误
+        if (submitError.code === '42501') {
+          throw new Error('报名失败：权限不足。请在 Supabase 控制台的 SQL Editor 中为 registrations 表设置 RLS 策略（或者运行我在 README 中提供的 SQL 脚本）。');
+        }
+        throw submitError;
+      }
       setSuccess(true);
     } catch (err: any) {
-      console.error(err);
-      setError(err.message || '报名失败，请稍后再试');
+      console.error('Supabase Submit Error:', err);
+      // 如果是网络连接失败 (Netlify 常见问题)
+      if (err.message === 'Failed to fetch' || err.message === 'Load failed') {
+        setError('网络连接失败 (Load failed)。这通常是因为配置的 URL 无法访问或 CORS 策略限制。请确保 Supabase URL 格式正确（以 https:// 开头）。');
+      } else {
+        setError(err.message || '报名失败，请稍后再试');
+      }
     } finally {
       setLoading(false);
     }
