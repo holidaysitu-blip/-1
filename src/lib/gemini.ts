@@ -1,4 +1,4 @@
-const GEMINI_API_KEY = "AIzaSyBIEt8xarjP77T8cLVN4BxNQbNY5XHMvNs";
+const GEMINI_API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
 const GEMINI_MODEL = "gemini-1.5-flash";
 
 export const SYSTEM_INSTRUCTION = `你叫“小吴”，是“章园夜校”的智能助手。
