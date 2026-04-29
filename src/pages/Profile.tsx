@@ -27,10 +27,17 @@ export default function Profile() {
     try {
       if (activeTab === '园主笔记') {
         const { data } = await supabase.from('notes').select('*').order('created_at', { ascending: false });
-        if (data) setNotes(data);
+        if (data && data.length > 0) setNotes(data);
       } else if (activeTab === '活动相册') {
         const { data } = await supabase.from('album').select('*').order('created_at', { ascending: false });
-        if (data) setAlbum(data);
+        if (data && data.length > 0) {
+          setAlbum(data);
+        } else {
+          setAlbum([
+            { id: '1', user_id: 'guest', image_url: '', caption: '春日雅集：香道初探', course_name: '宋代生活美学' },
+            { id: '2', user_id: 'guest', image_url: '', caption: '听松阁里，琴声悠扬', course_name: '古琴入门' }
+          ]);
+        }
       } else if (activeTab === '我的收藏') {
         const { data } = await supabase.from('favorites').select(`
           *,
@@ -69,14 +76,6 @@ export default function Profile() {
     <div className="px-6 py-6 space-y-8 pb-28 overflow-x-hidden">
       {/* Header */}
       <header className="flex items-center gap-6 mt-4">
-        <div className="w-16 h-16 rounded-full overflow-hidden border-[0.5px] border-primary/10 bg-white shadow-sm shrink-0">
-          <img 
-            src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=200&auto=format&fit=crop" 
-            alt="头像" 
-            referrerPolicy="no-referrer"
-            className="w-full h-full object-cover"
-          />
-        </div>
         <div className="flex-1">
           <h2 className="text-2xl font-serif font-bold text-primary">林宛瑜</h2>
           <span className="inline-block mt-1 px-3 py-1 bg-primary/10 text-primary rounded-lg text-[10px] font-bold uppercase tracking-wider">
@@ -101,7 +100,7 @@ export default function Profile() {
       {/* Profile Sections Navigation */}
       <section className="space-y-6">
         <div className="flex gap-6 overflow-x-auto no-scrollbar border-b border-primary/5">
-          {['我的订单', '园主笔记', '我的预约', '我的学习', '我的收藏'].map((tab) => (
+          {['我的订单', '园主笔记', '我的预约', '我的学习', '我的收藏', '活动相册'].map((tab) => (
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
@@ -146,7 +145,6 @@ export default function Profile() {
               >
                 {favorites.map(fav => (
                   <div key={fav.id} className="bg-white p-4 rounded-xl border border-primary/5 shadow-sm flex items-center gap-4">
-                    <img src={fav.courses?.image_url} referrerPolicy="no-referrer" className="w-16 h-16 rounded-lg object-cover" alt="" />
                     <div className="flex-1">
                       <h4 className="text-sm font-bold text-primary">{fav.courses?.title}</h4>
                       <p className="text-[10px] text-slate-400 mt-1">{fav.courses?.instructor}</p>
@@ -177,7 +175,6 @@ export default function Profile() {
                   .filter(r => activeTab === '我的学习' ? r.status === 'confirmed' : r.status === 'pending')
                   .map(reg => (
                   <div key={reg.id} className="bg-white p-4 rounded-xl border border-primary/5 shadow-sm flex items-center gap-4">
-                    <img src={reg.courses?.image_url} referrerPolicy="no-referrer" className="w-16 h-16 rounded-lg object-cover" alt="" />
                     <div className="flex-1">
                       <h4 className="text-sm font-bold text-primary">{reg.courses?.title}</h4>
                       <p className="text-[10px] text-slate-400 mt-1">{reg.courses?.date_info}</p>
@@ -232,6 +229,31 @@ export default function Profile() {
                   <div className="text-center py-12 text-slate-300">
                     <Edit3 size={40} className="mx-auto mb-2 opacity-20" />
                     <p className="text-xs">暂无笔记，快去记上一笔吧</p>
+                  </div>
+                )}
+              </motion.div>
+            )}
+
+            {activeTab === '活动相册' && (
+              <motion.div
+                key="album-view"
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.95 }}
+                className="grid grid-cols-2 gap-3"
+              >
+                {album.map(item => (
+                  <div key={item.id} className="relative group rounded-xl bg-primary/5 p-4 border border-primary/5">
+                    <div className="flex flex-col gap-2">
+                       <p className="text-xs text-primary font-medium line-clamp-2">{item.caption}</p>
+                       <span className="text-[8px] text-accent font-bold"># {item.course_name}</span>
+                    </div>
+                  </div>
+                ))}
+                {album.length === 0 && (
+                  <div className="col-span-2 text-center py-12 text-slate-300">
+                    <ImageIcon size={40} className="mx-auto mb-2 opacity-20" />
+                    <p className="text-xs">相册目前还是空的</p>
                   </div>
                 )}
               </motion.div>

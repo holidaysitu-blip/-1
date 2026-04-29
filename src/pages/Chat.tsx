@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Send, Mic, PlusCircle, MoreHorizontal } from 'lucide-react';
+import { Send, Mic, PlusCircle, MoreHorizontal, Book } from 'lucide-react';
 import { askXiaoWu } from '../lib/gemini';
 import { Message } from '../types';
 
@@ -31,7 +31,7 @@ export default function Chat() {
       parts: [{ text: m.text }]
     }));
 
-    const responseText = await askXiaoWu(input, history);
+    const responseText = await askXiaoWu(input);
     
     setIsTyping(false);
     setMessages(prev => [...prev, { role: 'model', text: responseText }]);
@@ -42,14 +42,6 @@ export default function Chat() {
       {/* Header */}
       <div className="px-6 py-3 bg-[#F5F5F5] border-b border-primary/10 flex items-center justify-between z-10">
         <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-full overflow-hidden border border-primary/10">
-            <img 
-              src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=200&auto=format&fit=crop" 
-              alt="小悟" 
-              referrerPolicy="no-referrer"
-              className="w-full h-full object-cover"
-            />
-          </div>
           <span className="font-serif font-bold text-primary">小吴 AI 助手</span>
         </div>
         <MoreHorizontal className="w-5 h-5 text-primary" />
@@ -74,45 +66,26 @@ export default function Chat() {
               animate={{ opacity: 1, x: 0 }}
               className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'} items-start gap-3`}
             >
-              {msg.role === 'model' && (
-                <div className="w-10 h-10 rounded-full bg-white border border-primary/10 overflow-hidden shrink-0 mt-1 shadow-sm text-[#F7F7F7]">
-                   <img 
-                    src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=200&auto=format&fit=crop" 
-                    alt="AI"
-                    referrerPolicy="no-referrer"
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-              )}
               <div className={`max-w-[85%] p-4 rounded-xl text-sm leading-relaxed shadow-sm ${
                 msg.role === 'user' 
                   ? 'bg-primary text-white rounded-tr-none' 
                   : 'bg-[#F2F2F2] text-primary border border-primary/5 rounded-tl-none'
               }`}>
+                {msg.role === 'model' && <span className="block text-[8px] font-bold uppercase tracking-wider mb-1 opacity-50">小吴 AI</span>}
                 {msg.text}
               </div>
-              {msg.role === 'user' && (
-                <div className="w-10 h-10 rounded-full border border-primary/10 overflow-hidden shrink-0 mt-1 shadow-sm">
-                  <img 
-                    src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=200&auto=format&fit=crop" 
-                    alt="User"
-                    referrerPolicy="no-referrer"
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-              )}
             </motion.div>
           ))}
           {isTyping && (
             <motion.div 
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              className="flex justify-start items-center gap-3"
+              className="flex justify-start items-center gap-2"
             >
-              <div className="w-8 h-8 rounded-full bg-white border border-primary/10 flex items-center justify-center">
-                 <div className="w-1.5 h-1.5 bg-primary/20 rounded-full animate-bounce" />
-                 <div className="w-1.5 h-1.5 bg-primary/20 rounded-full animate-bounce delay-100 mx-1" />
-                 <div className="w-1.5 h-1.5 bg-primary/20 rounded-full animate-bounce delay-200" />
+              <div className="flex items-center justify-center p-2">
+                 <div className="w-1 h-1 bg-primary/20 rounded-full animate-bounce" />
+                 <div className="w-1 h-1 bg-primary/20 rounded-full animate-bounce delay-100 mx-1" />
+                 <div className="w-1 h-1 bg-primary/20 rounded-full animate-bounce delay-200" />
               </div>
             </motion.div>
           )}

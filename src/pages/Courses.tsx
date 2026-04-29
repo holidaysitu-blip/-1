@@ -43,7 +43,7 @@ export default function Courses() {
           price: 1280,
           instructor: '李老师',
           category: '中医养生',
-          image_url: 'https://images.unsplash.com/photo-1591154665848-51ecbda60ca1?q=80&w=800&auto=format&fit=crop',
+          image_url: '',
           date_info: '周六 14:00-16:00 (共8课时)',
           location: '章园 · 听松阁',
           tag: '特邀名师'
@@ -55,7 +55,7 @@ export default function Courses() {
           price: 880,
           instructor: '李文轩 导师',
           category: '国学人文',
-          image_url: 'https://images.unsplash.com/photo-1576214945118-af2d152bb323?q=80&w=800&auto=format&fit=crop',
+          image_url: '',
           date_info: '周日 10:00-12:00',
           location: '章园 · 书香斋'
         },
@@ -66,7 +66,7 @@ export default function Courses() {
           price: 1080,
           instructor: '苏清婉 导师',
           category: '美学雅活',
-          image_url: 'https://images.unsplash.com/photo-1517849845537-4d257902454a?q=80&w=800&auto=format&fit=crop',
+          image_url: '',
           date_info: '周五 19:00-21:00',
           location: '章园 · 雅集苑'
         }
@@ -150,34 +150,18 @@ export default function Courses() {
           <motion.article 
             layout
             key={course.id}
-            className="group bg-white rounded-xl overflow-hidden border-[0.5px] border-primary/10 shadow-sm"
+            className="group bg-white rounded-xl overflow-hidden border-[0.5px] border-primary/10 shadow-sm p-5"
           >
-            <div className="relative aspect-video overflow-hidden">
-              <img 
-                src={course.image_url} 
-                alt={course.title}
-                referrerPolicy="no-referrer"
-                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-              />
-              {course.tag && (
-                <div className="absolute top-4 left-4 bg-[#7a3512] text-white text-[10px] uppercase font-bold px-3 py-1 rounded-sm">
-                  {course.tag}
-                </div>
-              )}
-              <button 
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleToggleFavorite(course.id);
-                }}
-                className="absolute top-4 right-4 p-2 bg-white/80 backdrop-blur-sm rounded-full text-slate-400 hover:text-accent transition-colors"
-              >
-                <Bookmark className="w-4 h-4" />
-              </button>
-            </div>
-            
-            <div className="p-5 flex flex-col gap-3">
+            <div className="flex flex-col gap-3">
               <div className="flex justify-between items-start">
-                <h3 className="text-lg font-serif font-bold text-primary">{course.title}</h3>
+                <div className="flex flex-col gap-1">
+                  {course.tag && (
+                    <span className="text-[#7a3512] text-[10px] uppercase font-bold tracking-wider mb-1">
+                      {course.tag}
+                    </span>
+                  )}
+                  <h3 className="text-lg font-serif font-bold text-primary">{course.title}</h3>
+                </div>
                 <span className="text-accent font-bold text-lg whitespace-nowrap ml-2">¥ {course.price}</span>
               </div>
               <p className="text-xs text-slate-500 line-clamp-2 leading-relaxed">

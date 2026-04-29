@@ -55,12 +55,12 @@ export default function RegistrationModal({
       <div className="bg-white w-full sm:w-[420px] rounded-t-2xl sm:rounded-2xl p-6 space-y-4">
         <div className="flex items-center justify-between">
           <h2 className="text-lg font-bold">课程报名</h2>
-          <button onClick={onClose}>
+          <button onClick={onClose} className="p-1">
             <X className="w-5 h-5" />
           </button>
         </div>
 
-        <div className="text-sm text-gray-500">{course.title}</div>
+        <div className="text-sm text-gray-500 font-serif pt-2">{course.title}</div>
 
         <input
           className="w-full border rounded-xl px-4 py-3"

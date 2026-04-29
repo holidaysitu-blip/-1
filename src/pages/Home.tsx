@@ -5,25 +5,8 @@ import { Link } from 'react-router-dom';
 export default function Home() {
   return (
     <div className="flex flex-col pb-24">
-      {/* Hero Section */}
-      <section className="px-6 py-6 max-w-5xl mx-auto w-full">
-        <motion.div 
-          initial={{ opacity: 0, scale: 0.98 }}
-          animate={{ opacity: 1, scale: 1 }}
-          className="relative aspect-[4/3] md:aspect-[21/9] rounded-xl overflow-hidden border-[0.5px] border-primary/10 shadow-sm bg-white"
-        >
-          <img 
-            src="https://images.unsplash.com/photo-1534067783941-51c9c23ecefd?q=80&w=1600&auto=format&fit=crop" 
-            alt="章园旗帜"
-            referrerPolicy="no-referrer"
-            className="w-full h-full object-cover"
-          />
-          <div className="absolute inset-0 bg-primary/5" />
-        </motion.div>
-      </section>
-
       {/* Main Title */}
-      <section className="px-6 mt-10 flex flex-col items-center text-center">
+      <section className="px-6 mt-6 flex flex-col items-center text-center">
         <motion.h2 
           initial={{ opacity: 0, y: 10 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -36,25 +19,15 @@ export default function Home() {
       </section>
 
       {/* Content Blocks */}
-      <section className="px-6 mt-12 max-w-5xl mx-auto space-y-20">
+      <section className="px-6 mt-12 max-w-5xl mx-auto space-y-16">
         {/* Block 1 */}
         <motion.article 
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
-          className="grid md:grid-cols-12 gap-8 items-center"
+          className="max-w-2xl mx-auto text-center md:text-left"
         >
-          <div className="md:col-span-12">
-             <div className="aspect-[16/9] rounded-xl overflow-hidden border-[0.5px] border-primary/10 bg-white p-2">
-               <img 
-                src="https://images.unsplash.com/photo-1528114039593-4366cc08227d?q=80&w=1600&auto=format&fit=crop" 
-                alt="文化"
-                referrerPolicy="no-referrer"
-                className="w-full h-full object-cover rounded-lg"
-               />
-             </div>
-          </div>
-          <div className="md:col-span-12 px-2 text-center md:text-left">
+          <div className="px-2">
             <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-accent/80 mb-2 block">百年文脉</span>
             <h3 className="text-2xl font-serif mb-4">太炎故居，静水深流</h3>
             <p className="text-slate-600 leading-relaxed font-sans text-sm md:text-base">
@@ -68,19 +41,9 @@ export default function Home() {
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
-          className="grid md:grid-cols-12 gap-8 items-center"
+          className="max-w-2xl mx-auto text-center md:text-left"
         >
-          <div className="md:col-span-12">
-             <div className="aspect-[16/9] rounded-xl overflow-hidden border-[0.5px] border-primary/10 bg-white p-2">
-               <img 
-                src="https://images.unsplash.com/photo-1536629910419-795a9478f773?q=80&w=1600&auto=format&fit=crop" 
-                alt="养生"
-                referrerPolicy="no-referrer"
-                className="w-full h-full object-cover rounded-lg"
-               />
-             </div>
-          </div>
-          <div className="md:col-span-12 px-2 text-center md:text-left">
+          <div className="px-2">
             <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-accent/80 mb-2 block">夜校愿景</span>
             <h3 className="text-2xl font-serif mb-4">日落而息，向内求索</h3>
             <p className="text-slate-600 leading-relaxed font-sans text-sm md:text-base">
