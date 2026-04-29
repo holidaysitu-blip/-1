@@ -42,11 +42,14 @@ export default function Chat() {
       {/* Header */}
       <div className="px-6 py-3 bg-[#F5F5F5] border-b border-primary/10 flex items-center justify-between z-10">
         <div className="flex items-center gap-3">
-          <img 
-            src="https://lh3.googleusercontent.com/aida/ADBb0uiH21PidWtzbRbhEh8JPepP4iFqcwSNjt9T7HItWHrnsxifE6ggmNVCya8tkFkfaDdSI4j3UEAUOOTi33ja_kNnz03JGq8L5XusUVJhcYAxa3is4TKRpZK-SHTla_cyZJ1WJUF6p1CRWDsUDIIIPB6uzHIE8nITUrpQRsqeHEPYxy9DZfCt62BPlv7o25TsGzq6SZjT1rIWcMqUFOpBckn8VyZYq5BT3SvhrwUf0Mvkg4C4ZbsUy3bPZ_1xFbTAcwa2ediUSEieRw" 
-            alt="小悟" 
-            className="w-8 h-8 rounded-full border border-primary/10"
-          />
+          <div className="w-8 h-8 rounded-full overflow-hidden border border-primary/10">
+            <img 
+              src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=200&auto=format&fit=crop" 
+              alt="小悟" 
+              referrerPolicy="no-referrer"
+              className="w-full h-full object-cover"
+            />
+          </div>
           <span className="font-serif font-bold text-primary">小吴 AI 助手</span>
         </div>
         <MoreHorizontal className="w-5 h-5 text-primary" />
@@ -74,8 +77,9 @@ export default function Chat() {
               {msg.role === 'model' && (
                 <div className="w-10 h-10 rounded-full bg-white border border-primary/10 overflow-hidden shrink-0 mt-1 shadow-sm text-[#F7F7F7]">
                    <img 
-                    src="https://lh3.googleusercontent.com/aida/ADBb0uiH21PidWtzbRbhEh8JPepP4iFqcwSNjt9T7HItWHrnsxifE6ggmNVCya8tkFkfaDdSI4j3UEAUOOTi33ja_kNnz03JGq8L5XusUVJhcYAxa3is4TKRpZK-SHTla_cyZJ1WJUF6p1CRWDsUDIIIPB6uzHIE8nITUrpQRsqeHEPYxy9DZfCt62BPlv7o25TsGzq6SZjT1rIWcMqUFOpBckn8VyZYq5BT3SvhrwUf0Mvkg4C4ZbsUy3bPZ_1xFbTAcwa2ediUSEieRw" 
+                    src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=200&auto=format&fit=crop" 
                     alt="AI"
+                    referrerPolicy="no-referrer"
                     className="w-full h-full object-cover"
                   />
                 </div>
@@ -90,8 +94,9 @@ export default function Chat() {
               {msg.role === 'user' && (
                 <div className="w-10 h-10 rounded-full border border-primary/10 overflow-hidden shrink-0 mt-1 shadow-sm">
                   <img 
-                    src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=200&auto=format&fit=crop" 
+                    src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=200&auto=format&fit=crop" 
                     alt="User"
+                    referrerPolicy="no-referrer"
                     className="w-full h-full object-cover"
                   />
                 </div>

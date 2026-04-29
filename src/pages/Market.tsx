@@ -10,7 +10,7 @@ export default function Market() {
       name: '章园监制秋梨膏',
       description: '古法慢熬，润肺降燥，居家常备之选。',
       price: 128,
-      image_url: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDfjOV8anqs1gV54W8RZLdJIy5pOJkq6XTI4PBo9Ee7FgAhyyrazv6kvl9i7H3yvMdaGZEy-8H819lnpmHmybTAdNFlnodfOKfUCHhd-PTxLgwhdj5Dgs4eKbr9Dcw1UlmQ0MNwEWXNB4VMUypkhLY10H90_8i0Veo8gR4Xn_Uk9I8VvGW6TBrZ3LQZNEVAetLKtoQx6pPxEpduRL64lJkwt1vg0RSztLbEyfdybMVaQuHBinlm7hzaVaKTNdOPZ15ZEGu8IporxGU',
+      image_url: 'https://images.unsplash.com/photo-1511914265872-c40672604a80?q=80&w=800&auto=format&fit=crop',
       tag: '园主推荐'
     },
     {
@@ -18,21 +18,21 @@ export default function Market() {
       name: '手工艾草枕',
       description: '精选陈年艾绒，棉麻布艺，安神助眠。',
       price: 88,
-      image_url: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAC62ZRSw_Wn3dCKJOyoHM1aM76X3KTFEB4BM_79a6R3IUk-0GDYvNoEMLHVOyj3OBQCFN2sYNwlsbjkoqB0I4-GvR8TQKENESPevARH9_1maG4xEmZ3zYC5RwOrFfjseUJFuAkg_cOWbnjfzwZ5nqeZ78zPj_KmObphvjbr8Ny4wSJI4KsRRlA5swDev3EhSXcn9qlYnP8Qq2mAYBb0BLvVC_1wH-kEizfzke3Wb6T18LweY3HkJXSECi99G3ToSl0X8FaCNdJDCs'
+      image_url: 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?q=80&w=800&auto=format&fit=crop'
     },
     {
       id: '3',
       name: '明前龙井·雅集定制',
       description: '核心产区，鲜爽甘醇，茶室特供。',
       price: 298,
-      image_url: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCzOu3Qa77U3KvX-L01Unv64OH9sA-F_CImkTKHbNvbjkuCX-Bzsu1VAToAaF-aj0J8La55mso7buW_dm7obIV_9EYwYwBahdU-e6WTlA_uMvPiFx3FuqYFCHdnbrKL9BZ9sqL1wFo_m0IwpqCLWCtzT_LwWtHGecjKmDkXWZLFQ4CqDLK2mWGHQtLUYLIOzwNP7HEBF3R42tLAeLSpvxO-GaiI-1DFXWHwPYwY7jJoxrWSquezkgwZYbWR_uZIZnossytRvtAKTmQ'
+      image_url: 'https://images.unsplash.com/photo-1564890369478-c89ca6d9cde9?q=80&w=800&auto=format&fit=crop'
     },
     {
       id: '4',
       name: '沉水线香礼盒',
       description: '天然香材，气韵清雅，适合读书打坐。',
       price: 168,
-      image_url: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDTm8Z7Lja9gBBFCxSvaFtwSLspYoE8JdbRn-qZGTEtWVsw6oryI_VRiN4UKaGm_Y1Yl0WC4J7uZmrfkLUIHzYO_PM6ZIE86uswyjEKHer_lMzMJdoe4E2dW2aEHaYxKZ66jhP8BHTdKtMyQJZaMdhGms6qrlAkq79TdlK6urt9xWnjf3J2Ae4MwcrL8aJzPomt-F_Ow_lu_TT6oeoGnqgeFKL_YBDxETmOhDd9OdDJr00cRR8o8MdsLb16AUZ7BKnprNHICkuUs5w',
+      image_url: 'https://images.unsplash.com/photo-1620843236055-6b744ce094c9?q=80&w=800&auto=format&fit=crop',
       tag: '园主推荐'
     }
   ];
@@ -55,6 +55,7 @@ export default function Market() {
               <img 
                 src={product.image_url} 
                 alt={product.name}
+                referrerPolicy="no-referrer"
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
               />
               {product.tag && (

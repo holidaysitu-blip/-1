@@ -43,7 +43,7 @@ export default function Courses() {
           price: 1280,
           instructor: '李老师',
           category: '中医养生',
-          image_url: 'https://lh3.googleusercontent.com/aida/ADBb0uiL9t66HmxwWcWCFbwD8VaJCH2gWKv3OrfIdAHdbAo2VCB7i4AT0DEZMVBfniYKB31_P_EnQlq5idpHek9atLZnGmZk4vSp7XEa0pvvbH2zau-7A52b0wnlctJX2uuDamOirfHy-NCo57F-9ARiIVgkpGHn2PGmy4VN2l8Tj4DBBVtPDirXm37ERiCJWNeIx0FleebYcNF2__SGYmBkL__ecJMpoep_IiwLvqXGQgbjWb5tyUIOZ6D3yLZRusckain57x0HFqAKDQ',
+          image_url: 'https://images.unsplash.com/photo-1591154665848-51ecbda60ca1?q=80&w=800&auto=format&fit=crop',
           date_info: '周六 14:00-16:00 (共8课时)',
           location: '章园 · 听松阁',
           tag: '特邀名师'
@@ -55,7 +55,7 @@ export default function Courses() {
           price: 880,
           instructor: '李文轩 导师',
           category: '国学人文',
-          image_url: 'https://lh3.googleusercontent.com/aida/ADBb0ujjR-xHglLZ1Uj9aPPXnUdcQTwR2g1eFSkVwvgsLlonhEGWA1elNFayBCJKA7orTxeY_MVqEqjXfXHQIhN03wa5C8Izkq9fI4arAaLWjfFXbtH0RxSo8ybxrDWfvPxKjy4H2TewpDu2G-VR5cjTsL-ZYePWkNGm2Tu5kWjSehWLBWFE4Ow3XatApCPm4IEIUIxxpBUzyA-db37NM-okL7dh28-MC4PrJODjZ8qa33OSHv-uqVKFL9SpPjVu2NtgQ5s2w37FM9KZ',
+          image_url: 'https://images.unsplash.com/photo-1576214945118-af2d152bb323?q=80&w=800&auto=format&fit=crop',
           date_info: '周日 10:00-12:00',
           location: '章园 · 书香斋'
         },
@@ -66,7 +66,7 @@ export default function Courses() {
           price: 1080,
           instructor: '苏清婉 导师',
           category: '美学雅活',
-          image_url: 'https://lh3.googleusercontent.com/aida/ADBb0ujEYqRrNsRlsGom4nzxcyvvGDJ_InM1TQ6_MvBTa5kj7rw7EskQ7xKGmODrIqc6EH_Zv0unvnKgEiPZoc-PYAadb9nxdDDWABj-YoPrcHaRypomq5jGDKFE0n7CEnUKEFi0RryQiwXkDOtp1J3hiodYvQTUVQ-Sfchmxyu2kVE7uOV1jEW6YD3OCO1AJW9xQzQbbX5OLWVFqOuh3B1kIuPEHqY3nTT4bvCuNrrry3Pzpu4MowBLgT342XC3Pir6gNWVBxdpjpR0qA',
+          image_url: 'https://images.unsplash.com/photo-1517849845537-4d257902454a?q=80&w=800&auto=format&fit=crop',
           date_info: '周五 19:00-21:00',
           location: '章园 · 雅集苑'
         }
@@ -156,6 +156,7 @@ export default function Courses() {
               <img 
                 src={course.image_url} 
                 alt={course.title}
+                referrerPolicy="no-referrer"
                 className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
               />
               {course.tag && (

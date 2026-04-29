@@ -71,8 +71,9 @@ export default function Profile() {
       <header className="flex items-center gap-6 mt-4">
         <div className="w-16 h-16 rounded-full overflow-hidden border-[0.5px] border-primary/10 bg-white shadow-sm shrink-0">
           <img 
-            src="https://lh3.googleusercontent.com/aida-public/AB6AXuArtYEfegP7pm7Iiedy3Vo6FpItMBwpdufp3kjL1tDkGhP8BPkSKYjtTVBC1WoDkXAc6zMjquz_ADvwCdn7wDPGva4CL0n_jSUUs_i9vN7uHGsxJ-lg6h0p9ndMxmQjESu2zzYP1mHX3frFNsciHYH7KMlAkrPFSauJfzWBBsEFwmUV7RMt32YI5C5Koq55_ySiJFjGuAD5yRuDIOC7eGuY0ykYNIHsTrSi9Xu2hMs7g1LwRpPSvhwkUUkWPjydFGwFd09mgfR5nGw" 
+            src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=200&auto=format&fit=crop" 
             alt="头像" 
+            referrerPolicy="no-referrer"
             className="w-full h-full object-cover"
           />
         </div>
@@ -145,7 +146,7 @@ export default function Profile() {
               >
                 {favorites.map(fav => (
                   <div key={fav.id} className="bg-white p-4 rounded-xl border border-primary/5 shadow-sm flex items-center gap-4">
-                    <img src={fav.courses?.image_url} className="w-16 h-16 rounded-lg object-cover" alt="" />
+                    <img src={fav.courses?.image_url} referrerPolicy="no-referrer" className="w-16 h-16 rounded-lg object-cover" alt="" />
                     <div className="flex-1">
                       <h4 className="text-sm font-bold text-primary">{fav.courses?.title}</h4>
                       <p className="text-[10px] text-slate-400 mt-1">{fav.courses?.instructor}</p>
@@ -176,7 +177,7 @@ export default function Profile() {
                   .filter(r => activeTab === '我的学习' ? r.status === 'confirmed' : r.status === 'pending')
                   .map(reg => (
                   <div key={reg.id} className="bg-white p-4 rounded-xl border border-primary/5 shadow-sm flex items-center gap-4">
-                    <img src={reg.courses?.image_url} className="w-16 h-16 rounded-lg object-cover" alt="" />
+                    <img src={reg.courses?.image_url} referrerPolicy="no-referrer" className="w-16 h-16 rounded-lg object-cover" alt="" />
                     <div className="flex-1">
                       <h4 className="text-sm font-bold text-primary">{reg.courses?.title}</h4>
                       <p className="text-[10px] text-slate-400 mt-1">{reg.courses?.date_info}</p>
