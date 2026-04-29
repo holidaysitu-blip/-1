@@ -43,7 +43,7 @@ export default function Courses() {
           price: 1280,
           instructor: '李老师',
           category: '中医养生',
-          image_url: 'https://images.unsplash.com/photo-1596510914967-6626b0463f90?auto=format&fit=crop&w=1200&q=80',
+          image_url: '/images/course-zhongyi.svg',
           date_info: '周六 14:00-16:00 (共8课时)',
           location: '章园 · 听松阁',
           tag: '特邀名师'
@@ -55,7 +55,7 @@ export default function Courses() {
           price: 880,
           instructor: '李文轩 导师',
           category: '国学人文',
-          image_url: 'https://images.unsplash.com/photo-1455390582262-044cdead277a?auto=format&fit=crop&w=1200&q=80',
+          image_url: '/images/course-shufa.svg',
           date_info: '周日 10:00-12:00',
           location: '章园 · 书香斋'
         },
