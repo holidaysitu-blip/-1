@@ -47,7 +47,7 @@ export default function Home() {
              <div className="aspect-[16/9] rounded-xl overflow-hidden border-[0.5px] border-primary/10 bg-white p-2">
                <img 
                 src="https://lh3.googleusercontent.com/aida/ADBb0uggyHVe6X8kpUZcxDsx3mjJEulHO33uB6fE1uUKamRsGrqRTR2RNNkypvqehGd8ui_PbLam3J_oLDozi8Tnx_x__EnEHvgOXY_vx84DTW8JCNuMpcYPhnCJdr6u-AlsW9KisPdMUsC1bIs0TFkGrNAZLt-a7_JLQfXm9c69YMIb929AIVXVOd8CswPRRMGOMwymtNAzs7QZ-FZTlcdPeGqQB_dxDP1LVVNiMx1yA6DWCWdCSMQcXAH-Uom3pHrkGT5LWLCFyiWz9g" 
-                alt="文化"
+                alt="图一"
                 className="w-full h-full object-cover rounded-lg"
                />
              </div>
@@ -72,7 +72,7 @@ export default function Home() {
              <div className="aspect-[16/9] rounded-xl overflow-hidden border-[0.5px] border-primary/10 bg-white p-2">
                <img 
                 src="https://lh3.googleusercontent.com/aida-public/AB6AXuArXbQS5bIT9wdcnd97nCkyuRwupBbvTedr9uHncY986YqZNKT3JFb9ORrWo6YQ1GzVnP0t5GSxAjYqeh_tPCvYLxm8ofM8hDLc1dJlQh5eXOzixJQijLwGAgKya1qZG-dVVuWQMBU6nK93yZTY9n2eDfz61CmI8xzmc3o2o-zSu8q-4EqptycbZH6kJZ31a8DHZeyjmfCGgCFtbHBKZhBIao3Ow98fiNtoTsMORxnxo9dKDZTHNaxRvF-I_gZ3YJn8XKz0Wr6-yhE" 
-                alt="养生"
+                alt="图二"
                 className="w-full h-full object-cover rounded-lg"
                />
              </div>
