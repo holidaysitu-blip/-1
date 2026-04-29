@@ -43,7 +43,7 @@ export default function Courses() {
           price: 1280,
           instructor: '李老师',
           category: '中医养生',
-          image_url: 'https://lh3.googleusercontent.com/aida/ADBb0uiL9t66HmxwWcWCFbwD8VaJCH2gWKv3OrfIdAHdbAo2VCB7i4AT0DEZMVBfniYKB31_P_EnQlq5idpHek9atLZnGmZk4vSp7XEa0pvvbH2zau-7A52b0wnlctJX2uuDamOirfHy-NCo57F-9ARiIVgkpGHn2PGmy4VN2l8Tj4DBBVtPDirXm37ERiCJWNeIx0FleebYcNF2__SGYmBkL__ecJMpoep_IiwLvqXGQgbjWb5tyUIOZ6D3yLZRusckain57x0HFqAKDQ',
+          image_url: '/images/course-zhongyi.svg',
           date_info: '周六 14:00-16:00 (共8课时)',
           location: '章园 · 听松阁',
           tag: '特邀名师'
@@ -55,7 +55,7 @@ export default function Courses() {
           price: 880,
           instructor: '李文轩 导师',
           category: '国学人文',
-          image_url: 'https://lh3.googleusercontent.com/aida/ADBb0ujjR-xHglLZ1Uj9aPPXnUdcQTwR2g1eFSkVwvgsLlonhEGWA1elNFayBCJKA7orTxeY_MVqEqjXfXHQIhN03wa5C8Izkq9fI4arAaLWjfFXbtH0RxSo8ybxrDWfvPxKjy4H2TewpDu2G-VR5cjTsL-ZYePWkNGm2Tu5kWjSehWLBWFE4Ow3XatApCPm4IEIUIxxpBUzyA-db37NM-okL7dh28-MC4PrJODjZ8qa33OSHv-uqVKFL9SpPjVu2NtgQ5s2w37FM9KZ',
+          image_url: '/images/course-shufa.svg',
           date_info: '周日 10:00-12:00',
           location: '章园 · 书香斋'
         },

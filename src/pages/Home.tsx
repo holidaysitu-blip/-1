@@ -13,8 +13,8 @@ export default function Home() {
           className="relative aspect-[4/3] md:aspect-[21/9] rounded-xl overflow-hidden border-[0.5px] border-primary/10 shadow-sm bg-white"
         >
           <img 
-            src="https://lh3.googleusercontent.com/aida/ADBb0ujQWjwikFk6HUqHy0aBuILR2qis1VLtZVOjr8jIZrY6I92i5ay3ygV3-23h0SYAI38YjsGFnyw_uB79nrLyx7sRUu8RP7WZnVqENwvgRsgwjRJVso0eF3JzuIzvipEXALaq5jCUuDlZbQK8BKiVsfZ6S3AjX5fzxpOFPvycyRClaD4OiiZZbEYRFy6xz_rmouWj4Xf-rAYRI7aLyopNh6Rn80vjocAgjecz5tsJAiZJGcWr-yDtHxMHTFz_uG_OzpOqvoHCS6dZbg" 
-            alt="章园旗帜"
+            src="/images/home-figure-1.svg" 
+            alt="图一"
             className="w-full h-full object-cover"
           />
           <div className="absolute inset-0 bg-primary/5" />
@@ -46,8 +46,8 @@ export default function Home() {
           <div className="md:col-span-12">
              <div className="aspect-[16/9] rounded-xl overflow-hidden border-[0.5px] border-primary/10 bg-white p-2">
                <img 
-                src="https://lh3.googleusercontent.com/aida/ADBb0uggyHVe6X8kpUZcxDsx3mjJEulHO33uB6fE1uUKamRsGrqRTR2RNNkypvqehGd8ui_PbLam3J_oLDozi8Tnx_x__EnEHvgOXY_vx84DTW8JCNuMpcYPhnCJdr6u-AlsW9KisPdMUsC1bIs0TFkGrNAZLt-a7_JLQfXm9c69YMIb929AIVXVOd8CswPRRMGOMwymtNAzs7QZ-FZTlcdPeGqQB_dxDP1LVVNiMx1yA6DWCWdCSMQcXAH-Uom3pHrkGT5LWLCFyiWz9g" 
-                alt="文化"
+                src="/images/home-figure-2.svg" 
+                alt="图二"
                 className="w-full h-full object-cover rounded-lg"
                />
              </div>
@@ -71,8 +71,8 @@ export default function Home() {
           <div className="md:col-span-12">
              <div className="aspect-[16/9] rounded-xl overflow-hidden border-[0.5px] border-primary/10 bg-white p-2">
                <img 
-                src="https://lh3.googleusercontent.com/aida-public/AB6AXuArXbQS5bIT9wdcnd97nCkyuRwupBbvTedr9uHncY986YqZNKT3JFb9ORrWo6YQ1GzVnP0t5GSxAjYqeh_tPCvYLxm8ofM8hDLc1dJlQh5eXOzixJQijLwGAgKya1qZG-dVVuWQMBU6nK93yZTY9n2eDfz61CmI8xzmc3o2o-zSu8q-4EqptycbZH6kJZ31a8DHZeyjmfCGgCFtbHBKZhBIao3Ow98fiNtoTsMORxnxo9dKDZTHNaxRvF-I_gZ3YJn8XKz0Wr6-yhE" 
-                alt="养生"
+                src="https://images.unsplash.com/photo-1511578314322-379afb476865?auto=format&fit=crop&w=1600&q=80" 
+                alt="图二"
                 className="w-full h-full object-cover rounded-lg"
                />
              </div>

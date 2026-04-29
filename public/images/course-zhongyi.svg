@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="675" viewBox="0 0 1200 675">
+  <defs><linearGradient id="g" x1="0" x2="1" y1="0" y2="1"><stop offset="0" stop-color="#d9b38c"/><stop offset="1" stop-color="#8d5a3b"/></linearGradient></defs>
+  <rect width="1200" height="675" fill="url(#g)"/>
+  <text x="80" y="340" font-size="96" fill="#fff" font-family="serif">图一 · 中医</text>
+  <text x="80" y="430" font-size="48" fill="#f8efe8" font-family="sans-serif">课程封面（本地资源）</text>
+</svg>
