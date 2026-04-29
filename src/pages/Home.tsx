@@ -13,8 +13,8 @@ export default function Home() {
           className="relative aspect-[4/3] md:aspect-[21/9] rounded-xl overflow-hidden border-[0.5px] border-primary/10 shadow-sm bg-white"
         >
           <img 
-            src="https://images.unsplash.com/photo-1528127269322-539801943592?auto=format&fit=crop&w=1600&q=80" 
-            alt="章园旗帜"
+            src="/images/home-figure-1.svg" 
+            alt="图一"
             className="w-full h-full object-cover"
           />
           <div className="absolute inset-0 bg-primary/5" />
@@ -46,8 +46,8 @@ export default function Home() {
           <div className="md:col-span-12">
              <div className="aspect-[16/9] rounded-xl overflow-hidden border-[0.5px] border-primary/10 bg-white p-2">
                <img 
-                src="https://images.unsplash.com/photo-1511578314322-379afb476865?auto=format&fit=crop&w=1600&q=80" 
-                alt="图一"
+                src="/images/home-figure-2.svg" 
+                alt="图二"
                 className="w-full h-full object-cover rounded-lg"
                />
              </div>
