@@ -1,6 +1,5 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Layout from './lib/components/Layout';
-import Admin from './components/Admin';
 import Home from './pages/Home';
 import Courses from './pages/Courses';
 import Market from './pages/Market';
@@ -12,7 +11,6 @@ export default function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/admin" element={<Admin />} />
 
         <Route path="/" element={<Layout />}>
           <Route index element={<Home />} />
