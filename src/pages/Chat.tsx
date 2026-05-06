@@ -8,7 +8,7 @@ export default function Chat() {
   const [messages, setMessages] = useState<Message[]>([
     {
       role: 'model',
-      text: '欢迎来到章园，我是小吴。你可以问我夜校课程、报名方式、中医课堂、书写课堂和章园故事。',
+      text: '欢迎来到古吴轩章园，我是小吴。你可以问我夜校课程、报名方式、中医课堂、书写课堂和古吴轩章园故事。',
     },
   ]);
   const [input, setInput] = useState('');
@@ -58,9 +58,9 @@ export default function Chat() {
               <MapPinned className="w-5 h-5" />
             </div>
             <div>
-              <h2 className="text-xl font-bold text-primary">章园寻猫记</h2>
+              <h2 className="text-xl font-bold text-primary">古吴轩章园寻猫记</h2>
               <p className="text-sm text-slate-500 mt-2 leading-relaxed">
-                欢迎大家来到章园寻猫。线下看到寻猫记二维码时，扫一扫就能打开对应介绍、线索或互动内容；边逛章园边发现更多小乐趣，把这座院落慢慢玩熟。
+                欢迎大家来到古吴轩章园寻猫。线下看到寻猫记二维码时，扫一扫就能打开对应介绍、线索或互动内容；边逛古吴轩章园边发现更多小乐趣，把这座院落慢慢玩熟。
               </p>
             </div>
           </div>

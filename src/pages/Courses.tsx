@@ -11,11 +11,11 @@ const mockCourses: Course[] = [
     title: '中药课堂：草木入门与日常养生',
     description: '从常见本草开始，认识药食同源的生活智慧，学习适合日常的香囊、茶饮与养护方法。',
     price: 498,
-    instructor: '章园导师',
+    instructor: '古吴轩章园导师',
     category: '中医养生',
     image_url: '/assets/tcm-class.png',
     date_info: '周六 14:00-16:00',
-    location: '章园 · 听松阁',
+    location: '古吴轩章园 · 听松阁',
     tag: '养生精选',
   },
   {
@@ -27,19 +27,19 @@ const mockCourses: Course[] = [
     category: '国学人文',
     image_url: '/assets/calligraphy-class.jpg',
     date_info: '周日 10:00-12:00',
-    location: '章园 · 书香斋',
+    location: '古吴轩章园 · 书香斋',
     tag: '新课',
   },
   {
     id: '3',
-    title: '章园夜校综合体验课',
+    title: '古吴轩章园综合体验课',
     description: '30+门精品课程持续开放，涵盖琴棋书画、花道香道、茶道、陶艺、传统服饰与咖啡培训等方向。',
     price: 498,
-    instructor: '章园夜校',
+    instructor: '古吴轩章园',
     category: '美学雅活',
     image_url: '/assets/night-school.png',
     date_info: '工作日晚间 / 周末滚动开课',
-    location: '章园 · 夜校空间',
+    location: '古吴轩章园 · 夜校空间',
     tag: '热门',
   },
 ];
@@ -95,7 +95,7 @@ export default function Courses() {
       <div className="flex items-center justify-between mb-8 px-2">
         <div className="flex items-center gap-2">
           <Book className="w-5 h-5 text-primary" />
-          <h2 className="text-xl font-bold font-serif text-primary">章园夜校</h2>
+          <h2 className="text-xl font-bold font-serif text-primary">古吴轩章园</h2>
         </div>
         <div className="flex items-center gap-4 text-slate-400">
           <Search className="w-5 h-5" />

@@ -2,7 +2,7 @@ import { createClient } from '@supabase/supabase-js';
 
 const SUPABASE_URL = process.env.SUPABASE_URL || 'https://pfxssdnqxtfrpqelbndm.supabase.co';
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'guwuxuanyexiao';
-const PROJECT_KEYWORDS = ['章园', '夜校', '中医', '经络', '魔碗', '书法', '书写', '雅活', '美学', '活动'];
+const PROJECT_KEYWORDS = ['古吴轩章园', '夜校', '中医', '经络', '魔碗', '书法', '书写', '雅活', '美学', '活动'];
 const MEMBER_USER = 'member-profile';
 const CAT_LINK_USER = 'xunmao-link';
 const MARKET_ITEM_USER = 'market-item';
@@ -147,7 +147,7 @@ async function loadAdminData(supabase) {
     market_favorites,
     generated_at: new Date().toISOString(),
     filters: {
-      project: '章园夜校',
+      project: '古吴轩章园',
       hidden_non_project_rows: {
         registrations: registrationsResult.data.length - registrations.length,
         notes: notesResult.data.length - notes.length - members.length - market_items.length - market_favorites.length,

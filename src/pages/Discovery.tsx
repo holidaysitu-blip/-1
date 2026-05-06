@@ -12,7 +12,7 @@ export default function Discovery() {
           animate={{ opacity: 1, y: 0 }}
           className="space-y-2 border-b border-primary/10 pb-6"
         >
-          <h2 className="text-3xl font-serif font-bold text-primary tracking-tight">古吴轩 · 章园</h2>
+          <h2 className="text-3xl font-serif font-bold text-primary tracking-tight">古吴轩 · 古吴轩章园</h2>
           <div className="flex items-center gap-2">
             <span className="w-4 h-[1px] bg-accent" />
             <p className="text-primary/60 text-[10px] tracking-widest uppercase font-sans">苏州近代文化的人文航标</p>
@@ -26,7 +26,7 @@ export default function Discovery() {
           
           <div className="space-y-6 text-slate-700 leading-relaxed font-sans text-sm md:text-base">
             <p>
-              <strong className="text-primary font-serif">古吴轩章园</strong>，位于苏州姑苏区锦帆路38号，原为近代思想家、国学大师章太炎先生晚年在苏州的故居。这里始建于1932年，章太炎于1934年定居于此，并在此藏书、著述、会客、讲学，创办“章氏国学讲习会”，章园也因此成为苏州近代文化史中一处重要的人文空间。
+              <strong className="text-primary font-serif">古吴轩章园</strong>，位于苏州姑苏区锦帆路38号，原为近代思想家、国学大师章太炎先生晚年在苏州的故居。这里始建于1932年，章太炎于1934年定居于此，并在此藏书、著述、会客、讲学，创办“章氏国学讲习会”，古吴轩章园也因此成为苏州近代文化史中一处重要的人文空间。
             </p>
 
             <div className="grid grid-cols-2 gap-4 py-4">
@@ -43,7 +43,7 @@ export default function Discovery() {
             </div>
 
             <p>
-              章园建筑由三栋民国时期老洋房组成，整体呈现中西合璧的风格：清水砖墙、苏式木花窗、中式亭廊与罗马柱并置，既有江南宅院的文气，也保留了民国建筑的时代特征。南楼约600平方米，被规划为章太炎故居博物馆；北侧两栋建筑约880平方米，现作为古吴轩书店的主要阅读与活动空间。
+              古吴轩章园建筑由三栋民国时期老洋房组成，整体呈现中西合璧的风格：清水砖墙、苏式木花窗、中式亭廊与罗马柱并置，既有江南宅院的文气，也保留了民国建筑的时代特征。南楼约600平方米，被规划为章太炎故居博物馆；北侧两栋建筑约880平方米，现作为古吴轩书店的主要阅读与活动空间。
             </p>
 
             <blockquote className="border-l-4 border-accent pl-4 py-2 bg-accent/5 rounded-r-lg italic text-slate-600 font-serif">
@@ -51,7 +51,7 @@ export default function Discovery() {
             </blockquote>
 
             <p>
-              2023年，古吴轩书店接手运营，并由青天制作所主持空间改造，将这座近百年老宅更新为“古吴轩书店章太炎故居店”。同年11月12日，书店正式开放，章园也从单一故居空间，转变为集故居展陈、书籍阅读、文化活动、国学讲堂、茶咖休闲于一体的复合型文化空间。
+              2023年，古吴轩书店接手运营，并由青天制作所主持空间改造，将这座近百年老宅更新为“古吴轩书店章太炎故居店”。同年11月12日，书店正式开放，古吴轩章园也从单一故居空间，转变为集故居展陈、书籍阅读、文化活动、国学讲堂、茶咖休闲于一体的复合型文化空间。
             </p>
 
             <p>
@@ -79,7 +79,7 @@ export default function Discovery() {
       <section className="px-6 py-12 text-center">
         <div className="w-12 h-[1px] bg-primary/20 mx-auto mb-6" />
         <p className="text-xs text-slate-400 font-serif leading-relaxed">
-          扫码即可重新进入此章园介绍页<br/>
+          扫码即可重新进入此古吴轩章园介绍页<br/>
           欢迎来到章太炎故居书店
         </p>
       </section>

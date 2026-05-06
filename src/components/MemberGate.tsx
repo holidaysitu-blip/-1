@@ -35,7 +35,7 @@ export default function MemberGate({ children }: { children: ReactNode }) {
       <div className="bg-white w-full max-w-sm rounded-xl border border-primary/10 shadow-xl p-7">
         <div className="flex items-center gap-3 mb-5">
           <ShieldCheck className="w-6 h-6 text-primary" />
-          <h1 className="text-2xl font-bold text-primary">注册章园夜校会员</h1>
+          <h1 className="text-2xl font-bold text-primary">注册古吴轩章园会员</h1>
         </div>
         <div className="space-y-3">
           <input

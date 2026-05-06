@@ -14,7 +14,7 @@ export default function Layout() {
     <div className="min-h-screen flex flex-col bg-paper-texture">
       <header className="fixed top-0 left-0 right-0 h-12 bg-[#F5F5F5] border-b border-primary/10 flex items-center justify-between px-6 z-50">
         <Sprout className="w-6 h-6 text-primary" />
-        <h1 className="text-lg font-serif font-bold tracking-wider text-primary">章园夜校</h1>
+        <h1 className="text-lg font-serif font-bold tracking-wider text-primary">古吴轩章园</h1>
         <div className="w-6" />
       </header>
 

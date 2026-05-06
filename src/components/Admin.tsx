@@ -154,7 +154,7 @@ export default function Admin() {
         <form onSubmit={handleLogin} className="bg-white rounded-xl shadow-xl p-7 w-full max-w-sm border border-primary/10">
           <div className="flex items-center gap-3 mb-5">
             <ShieldCheck className="w-6 h-6 text-primary" />
-            <h1 className="text-2xl font-bold text-primary">章园夜校数据后台</h1>
+            <h1 className="text-2xl font-bold text-primary">古吴轩章园数据后台</h1>
           </div>
           <input
             type="password"
@@ -177,7 +177,7 @@ export default function Admin() {
       <div className="max-w-6xl mx-auto space-y-6">
         <header className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <div>
-            <h1 className="text-3xl font-bold text-primary">章园夜校数据后台</h1>
+            <h1 className="text-3xl font-bold text-primary">古吴轩章园数据后台</h1>
             <p className="text-sm text-slate-500 mt-1">
               {data?.generated_at ? `最近刷新：${new Date(data.generated_at).toLocaleString('zh-CN')}` : '读取 Supabase 数据'}
             </p>

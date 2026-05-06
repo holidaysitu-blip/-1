@@ -63,7 +63,7 @@ function emptyCourse(): CourseRow {
     category: type === 'event' ? '活动体验' : '中医养生',
     image_url: '',
     date_info: '',
-    location: '章园 · 夜校空间',
+    location: '古吴轩章园 · 夜校空间',
     tag: type === 'event' ? '活动' : '',
   };
 }

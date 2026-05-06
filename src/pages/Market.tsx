@@ -19,7 +19,7 @@ type MarketItem = {
 const fallbackItems: MarketItem[] = [
   {
     id: 'fallback-1',
-    name: '章园监制秋梨膏',
+    name: '古吴轩章园监制秋梨膏',
     description: '古法慢熬，润肺降燥，适合作为日常养生小礼。',
     price: 128,
     image_url: '',

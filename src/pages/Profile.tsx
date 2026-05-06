@@ -172,7 +172,7 @@ export default function Profile() {
             <h2 className="text-2xl font-serif font-bold text-primary truncate">{member.name}</h2>
             <p className="text-xs text-slate-400 mt-1">{member.phone}</p>
             <span className="inline-block mt-2 px-3 py-1 bg-primary/10 text-primary rounded-lg text-[10px] font-bold tracking-wider">
-              章园夜校会员
+              古吴轩章园会员
             </span>
           </div>
           <button onClick={() => setShowEditModal(true)} className="px-3 py-2 rounded-lg bg-slate-50 text-primary text-xs font-bold border border-primary/10">
@@ -190,10 +190,10 @@ export default function Profile() {
       <section className="bg-white rounded-xl border border-primary/10 p-5 space-y-4">
         <div className="flex items-center gap-3">
           <Gift className="w-6 h-6 text-accent" />
-          <h3 className="text-lg font-serif">章园寻猫记</h3>
+          <h3 className="text-lg font-serif">古吴轩章园寻猫记</h3>
         </div>
         <p className="text-sm text-slate-600 leading-relaxed">
-          欢迎大家来到章园寻猫。线下看到寻猫记二维码时，扫一扫就能打开对应介绍、线索或互动内容；边逛章园边发现更多小乐趣，把这座院落慢慢玩熟。
+          欢迎大家来到古吴轩章园寻猫。线下看到寻猫记二维码时，扫一扫就能打开对应介绍、线索或互动内容；边逛古吴轩章园边发现更多小乐趣，把这座院落慢慢玩熟。
         </p>
       </section>
 

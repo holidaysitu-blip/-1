@@ -3,7 +3,7 @@ import { createClient } from '@supabase/supabase-js';
 const SUPABASE_URL = process.env.SUPABASE_URL || 'https://pfxssdnqxtfrpqelbndm.supabase.co';
 const ADMIN_PASSWORD = process.env.CONTENT_ADMIN_PASSWORD || process.env.ADMIN_PASSWORD || 'guwuxuanyexiao';
 const IMAGE_BUCKET = process.env.ADMIN_IMAGE_BUCKET || 'night-school-images';
-const PROJECT_KEYWORDS = ['章园', '夜校', '中医', '经络', '魔碗', '书法', '书写', '雅活', '美学', '活动'];
+const PROJECT_KEYWORDS = ['古吴轩章园', '夜校', '中医', '经络', '魔碗', '书法', '书写', '雅活', '美学', '活动'];
 const CAT_LINK_USER = 'xunmao-link';
 const MARKET_ITEM_USER = 'market-item';
 const CATEGORY_USER = 'content-category';
