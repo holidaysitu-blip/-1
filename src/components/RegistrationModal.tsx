@@ -1,6 +1,7 @@
 import { X } from 'lucide-react';
 import { useState } from 'react';
 import { supabase } from '../lib/supabase';
+import { getCurrentMember } from '../lib/member';
 
 type Props = {
   isOpen: boolean;
@@ -8,20 +9,15 @@ type Props = {
   course: any;
 };
 
-export default function RegistrationModal({
-  isOpen,
-  onClose,
-  course,
-}: Props) {
-  const [name, setName] = useState('');
-  const [phone, setPhone] = useState('');
+export default function RegistrationModal({ isOpen, onClose, course }: Props) {
   const [loading, setLoading] = useState(false);
+  const member = getCurrentMember();
 
   if (!isOpen || !course) return null;
 
   async function handleSubmit() {
-    if (!name || !phone) {
-      alert('请填写姓名和手机号');
+    if (!member) {
+      alert('请先注册会员');
       return;
     }
 
@@ -29,9 +25,9 @@ export default function RegistrationModal({
 
     const { error } = await supabase.from('registrations').insert([
       {
-        user_name: name,
-        user_phone: phone,
-        user_id: 'guest',
+        user_name: member.name,
+        user_phone: member.phone,
+        user_id: member.id,
         course_id: course.id,
         status: 'pending',
       },
@@ -44,9 +40,7 @@ export default function RegistrationModal({
       return;
     }
 
-    alert('报名成功！');
-    setName('');
-    setPhone('');
+    alert('报名成功，已进入后台数据');
     onClose();
   }
 
@@ -55,32 +49,18 @@ export default function RegistrationModal({
       <div className="bg-white w-full sm:w-[420px] rounded-t-2xl sm:rounded-2xl p-6 space-y-4">
         <div className="flex items-center justify-between">
           <h2 className="text-lg font-bold">课程报名</h2>
-          <button onClick={onClose} className="p-1">
+          <button onClick={onClose} className="p-1" aria-label="关闭">
             <X className="w-5 h-5" />
           </button>
         </div>
 
         <div className="text-sm text-gray-500 font-serif pt-2">{course.title}</div>
+        <div className="bg-slate-50 border border-primary/10 rounded-xl p-4 text-sm text-slate-600">
+          <p>会员：{member?.name}</p>
+          <p className="mt-1">手机号：{member?.phone}</p>
+        </div>
 
-        <input
-          className="w-full border rounded-xl px-4 py-3"
-          placeholder="请输入姓名"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-        />
-
-        <input
-          className="w-full border rounded-xl px-4 py-3"
-          placeholder="请输入手机号"
-          value={phone}
-          onChange={(e) => setPhone(e.target.value)}
-        />
-
-        <button
-          onClick={handleSubmit}
-          disabled={loading}
-          className="w-full bg-primary text-white py-3 rounded-xl"
-        >
+        <button onClick={handleSubmit} disabled={loading} className="w-full bg-primary text-white py-3 rounded-xl disabled:opacity-60">
           {loading ? '提交中...' : '确认报名'}
         </button>
       </div>

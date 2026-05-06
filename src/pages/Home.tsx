@@ -1,82 +1,93 @@
 import { motion } from 'motion/react';
-import { ArrowRight, Sparkles } from 'lucide-react';
+import { ArrowRight, BookOpen, Landmark, MapPin, Sparkles } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 export default function Home() {
   return (
     <div className="flex flex-col pb-24">
-      {/* Main Title */}
-      <section className="px-6 mt-6 flex flex-col items-center text-center">
-        <motion.h2 
-          initial={{ opacity: 0, y: 10 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="text-3xl md:text-4xl text-primary leading-snug font-serif font-bold tracking-tight px-4"
+      <section className="relative">
+        <img
+          src="/assets/home-zhangyuan.png"
+          alt="章园庭院"
+          className="w-full h-[320px] object-cover"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-primary/75 via-primary/20 to-transparent" />
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="absolute inset-x-0 bottom-0 px-6 pb-8 text-white"
         >
-          走进章园：人文与养生的交汇之地
-        </motion.h2>
-        <div className="w-[1px] h-12 bg-primary/20 mt-8" />
-      </section>
-
-      {/* Content Blocks */}
-      <section className="px-6 mt-12 max-w-5xl mx-auto space-y-16">
-        {/* Block 1 */}
-        <motion.article 
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          className="max-w-2xl mx-auto text-center md:text-left"
-        >
-          <div className="px-2">
-            <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-accent/80 mb-2 block">百年文脉</span>
-            <h3 className="text-2xl font-serif mb-4">太炎故居，静水深流</h3>
-            <p className="text-slate-600 leading-relaxed font-sans text-sm md:text-base">
-              坐落于喧嚣都市中的一方净土，章园承载着国学大师章太炎先生的精神印记。在这里，白墙黛瓦与曲径通幽不仅是建筑的语言，更是让心境沉淀、思绪延展的空间载体。
-            </p>
-          </div>
-        </motion.article>
-
-        {/* Block 2 */}
-        <motion.article 
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          className="max-w-2xl mx-auto text-center md:text-left"
-        >
-          <div className="px-2">
-            <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-accent/80 mb-2 block">夜校愿景</span>
-            <h3 className="text-2xl font-serif mb-4">日落而息，向内求索</h3>
-            <p className="text-slate-600 leading-relaxed font-sans text-sm md:text-base">
-              章园夜校旨在为现代都市人提供一处精神栖息地。当夜幕降临，我们褪去白日的疲惫，通过八段锦的舒展、古琴的泛音、香道的冥想，重新建立与自我身体及内心的深度联结。
-            </p>
-          </div>
-        </motion.article>
-
-        {/* Philosophy Card */}
-        <motion.div 
-          whileInView={{ opacity: 1, y: 0 }}
-          initial={{ opacity: 0, y: 20 }}
-          viewport={{ once: true }}
-          className="bg-white/50 backdrop-blur-sm border border-primary/10 rounded-2xl p-10 text-center space-y-6 shadow-sm"
-        >
-          <Sparkles className="w-8 h-8 text-primary/30 mx-auto" strokeWidth={1} />
-          <h3 className="text-2xl text-primary font-serif">Life Wellness 生活哲学</h3>
-          <p className="max-w-md mx-auto text-slate-500 font-sans text-sm leading-relaxed">
-            真正的养生，不拘泥于形式，而是融于日常的起居行止。在章园，我们将传统中医智慧与现代生活节奏相融合，倡导一种“不疾不徐，顺应自然”的现代文人生活方式。
+          <p className="text-[10px] tracking-[0.28em] uppercase mb-3 text-white/80">Zhang Yuan Night School</p>
+          <h2 className="text-4xl font-serif font-bold leading-tight text-white">在章园，开启我的夜校之旅</h2>
+          <p className="text-sm leading-relaxed mt-4 text-white/85 max-w-xl">
+            百年院落、人文课堂与当代生活美学在这里相遇。下班以后，把自己交还给一盏灯、一节课和一段安静的时间。
           </p>
         </motion.div>
-
-        {/* CTA */}
-        <div className="flex justify-center pt-8">
-          <Link 
-            to="/courses"
-            className="flex items-center justify-center gap-3 bg-primary text-white font-serif text-lg px-10 py-5 rounded-full shadow-xl hover:-translate-y-1 transition-all active:translate-y-0 group"
-          >
-            <span>开启我的养生之旅</span>
-            <ArrowRight className="w-6 h-6 group-hover:translate-x-1 transition-transform" />
-          </Link>
-        </div>
       </section>
+
+      <section className="px-6 mt-8 max-w-5xl mx-auto space-y-8">
+        <div className="grid grid-cols-3 gap-3">
+          <InfoTile icon={<Landmark className="w-5 h-5" />} label="太炎故居" text="百年文脉" />
+          <InfoTile icon={<BookOpen className="w-5 h-5" />} label="夜校课程" text="下班而学" />
+          <InfoTile icon={<MapPin className="w-5 h-5" />} label="姑苏章园" text="院落雅集" />
+        </div>
+
+        <motion.section
+          initial={{ opacity: 0, y: 12 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="bg-white/70 border border-primary/10 rounded-xl p-5 space-y-4"
+        >
+          <div>
+            <span className="text-[10px] font-bold tracking-[0.2em] text-accent/80">章园</span>
+            <h3 className="text-2xl font-serif mt-1">一座被重新打开的文化院落</h3>
+          </div>
+          <p className="text-sm text-slate-600 leading-relaxed">
+            章园曾是章太炎先生晚年在苏州的重要生活与讲学空间。今天，它从故居、书店、展陈与公共文化活动中生长出新的日常：可以阅读、听课、会友，也可以在夜校里重新靠近传统文化与自己的身心。
+          </p>
+          <div className="grid grid-cols-2 gap-3 text-xs text-slate-500">
+            <div className="rounded-lg bg-slate-50 p-3 border border-primary/5">民国建筑与江南院落气质并存</div>
+            <div className="rounded-lg bg-slate-50 p-3 border border-primary/5">课程、活动、雅集与寻猫内容联动</div>
+          </div>
+        </motion.section>
+
+        <motion.section
+          initial={{ opacity: 0, y: 12 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="grid md:grid-cols-[0.9fr_1.1fr] gap-5 items-center"
+        >
+          <img
+            src="/assets/night-school.png"
+            alt="章园夜校课程海报"
+            className="w-full aspect-[4/5] object-cover object-top rounded-xl shadow-sm border border-primary/10"
+          />
+          <div className="space-y-4">
+            <Sparkles className="w-7 h-7 text-primary/30" strokeWidth={1} />
+            <h3 className="text-2xl font-serif">日落而学，向内求索</h3>
+            <p className="text-slate-600 leading-relaxed text-sm">
+              章园夜校把中医养生、书写、香道、茶道、琴棋书画与生活美学放进同一个院落。课程不追求拥挤的信息量，而希望给你一段可持续回到自身的时间。
+            </p>
+            <Link
+              to="/courses"
+              className="inline-flex items-center justify-center gap-3 bg-primary text-white font-serif text-base px-6 py-4 rounded-full shadow-lg active:scale-95 transition-transform"
+            >
+              <span>开启我的夜校之旅</span>
+              <ArrowRight className="w-5 h-5" />
+            </Link>
+          </div>
+        </motion.section>
+      </section>
+    </div>
+  );
+}
+
+function InfoTile({ icon, label, text }: { icon: React.ReactNode; label: string; text: string }) {
+  return (
+    <div className="bg-white border border-primary/10 rounded-xl p-3 min-h-[88px]">
+      <div className="text-accent mb-2">{icon}</div>
+      <div className="text-sm font-bold text-primary">{label}</div>
+      <div className="text-[10px] text-slate-400 mt-1">{text}</div>
     </div>
   );
 }

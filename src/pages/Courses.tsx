@@ -1,85 +1,78 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { motion } from 'motion/react';
-import { Sprout, MapPin, Calendar, Users, Search, Book, ChevronDown, Bookmark } from 'lucide-react';
+import { Book, Calendar, ChevronDown, MapPin, Search } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { Course } from '../types';
 import RegistrationModal from '../components/RegistrationModal';
+
+const mockCourses: Course[] = [
+  {
+    id: '1',
+    title: '中药课堂：草木入门与日常养生',
+    description: '从常见本草开始，认识药食同源的生活智慧，学习适合日常的香囊、茶饮与养护方法。',
+    price: 498,
+    instructor: '章园导师',
+    category: '中医养生',
+    image_url: '/assets/tcm-class.png',
+    date_info: '周六 14:00-16:00',
+    location: '章园 · 听松阁',
+    tag: '养生精选',
+  },
+  {
+    id: '2',
+    title: '书写课堂：笔墨入门与临帖练习',
+    description: '从执笔、用墨和线条开始，在一笔一画中安顿心绪，体会传统书写的节奏与气韵。',
+    price: 498,
+    instructor: '书写导师',
+    category: '国学人文',
+    image_url: '/assets/calligraphy-class.jpg',
+    date_info: '周日 10:00-12:00',
+    location: '章园 · 书香斋',
+    tag: '新课',
+  },
+  {
+    id: '3',
+    title: '章园夜校综合体验课',
+    description: '30+门精品课程持续开放，涵盖琴棋书画、花道香道、茶道、陶艺、传统服饰与咖啡培训等方向。',
+    price: 498,
+    instructor: '章园夜校',
+    category: '美学雅活',
+    image_url: '/assets/night-school.png',
+    date_info: '工作日晚间 / 周末滚动开课',
+    location: '章园 · 夜校空间',
+    tag: '热门',
+  },
+];
+
+function courseImages(value = '') {
+  if (!value) return [];
+  try {
+    const parsed = JSON.parse(value);
+    if (Array.isArray(parsed)) return parsed.filter((item): item is string => typeof item === 'string' && item.trim().length > 0);
+  } catch {
+    // Older content stores a single image URL as plain text.
+  }
+  return [value].filter(Boolean);
+}
+
+function coverImage(value = '') {
+  return courseImages(value)[0] || '';
+}
 
 export default function Courses() {
   const [courses, setCourses] = useState<Course[]>([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState('全部');
+  const [query, setQuery] = useState('');
   const [selectedCourse, setSelectedCourse] = useState<Course | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  async function handleToggleFavorite(courseId: string) {
-    try {
-      // First check if already favorited
-      const { data: existing } = await supabase
-        .from('favorites')
-        .select('*')
-        .eq('course_id', courseId)
-        .single();
-
-      if (existing) {
-        await supabase.from('favorites').delete().eq('course_id', courseId);
-        alert('已取消收藏');
-      } else {
-        await supabase.from('favorites').insert([{ user_id: 'guest', course_id: courseId }]);
-        alert('已加入我的收藏');
-      }
-    } catch (e) {
-      console.error(e);
-    }
-  }
-
   useEffect(() => {
     async function fetchCourses() {
-      const mockCourses: Course[] = [
-        {
-          id: '1',
-          title: '中医经络调理实操',
-          description: '溯源经典，结合现代人体工学。本课程由资深中医专家带教，在章园雅静的氛围中，掌握实用的经络疏通与日常养护技巧。',
-          price: 1280,
-          instructor: '李老师',
-          category: '中医养生',
-          image_url: '',
-          date_info: '周六 14:00-16:00 (共8课时)',
-          location: '章园 · 听松阁',
-          tag: '特邀名师'
-        },
-        {
-          id: '2',
-          title: '魏碑书法入门与临摹',
-          description: '从《张猛龙碑》入手，体会北碑的雄强与古拙，修心养性。',
-          price: 880,
-          instructor: '李文轩 导师',
-          category: '国学人文',
-          image_url: '',
-          date_info: '周日 10:00-12:00',
-          location: '章园 · 书香斋'
-        },
-        {
-          id: '3',
-          title: '宋代点茶与生活美学',
-          description: '重现宋人吃茶的清雅意境，学习击拂手法，品味四般闲事。',
-          price: 1080,
-          instructor: '苏清婉 导师',
-          category: '美学雅活',
-          image_url: '',
-          date_info: '周五 19:00-21:00',
-          location: '章园 · 雅集苑'
-        }
-      ];
-
       try {
-        const { data, error } = await supabase.from('courses').select('*');
+        const { data, error } = await supabase.from('courses').select('*').order('created_at', { ascending: false });
         if (error) throw error;
-        if (data && data.length > 0) {
-          setCourses(data);
-        } else {
-          setCourses(mockCourses);
-        }
+        setCourses(data && data.length > 0 ? data : mockCourses);
       } catch (e) {
         setCourses(mockCourses);
       } finally {
@@ -90,30 +83,34 @@ export default function Courses() {
     fetchCourses();
   }, []);
 
-  const categories = ['全部', '中医养生', '国学人文', '美学雅活'];
-  const filteredCourses = filter === '全部' ? courses : courses.filter(c => c.category === filter);
+  const categories = useMemo(() => ['全部', ...Array.from(new Set(courses.map((course) => course.category).filter(Boolean)))], [courses]);
+  const filteredCourses = courses.filter((course) => {
+    const matchesCategory = filter === '全部' || course.category === filter;
+    const text = `${course.title} ${course.category} ${course.description} ${course.instructor}`.toLowerCase();
+    return matchesCategory && text.includes(query.trim().toLowerCase());
+  });
 
   return (
     <div className="px-6 py-6 pb-24 relative">
-      {/* Top Header Mockup */}
       <div className="flex items-center justify-between mb-8 px-2">
         <div className="flex items-center gap-2">
           <Book className="w-5 h-5 text-primary" />
           <h2 className="text-xl font-bold font-serif text-primary">章园夜校</h2>
         </div>
         <div className="flex items-center gap-4 text-slate-400">
-           <Search className="w-5 h-5" />
-           <div className="w-5 h-5 rounded-full border border-slate-300" />
+          <Search className="w-5 h-5" />
+          <div className="w-5 h-5 rounded-full border border-slate-300" />
         </div>
       </div>
 
-      {/* Search & Filter */}
       <section className="space-y-6 mb-8">
         <div className="relative">
           <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 w-4 h-4" />
-          <input 
-            type="text" 
-            placeholder="搜索课程、讲师或雅集..." 
+          <input
+            type="text"
+            value={query}
+            onChange={(event) => setQuery(event.target.value)}
+            placeholder="搜索课程、讲师或分类..."
             className="w-full bg-[#F2F2F2] border-none rounded-xl py-3 pl-10 pr-4 text-sm focus:ring-0 placeholder:text-slate-400"
           />
         </div>
@@ -128,77 +125,64 @@ export default function Courses() {
               }`}
             >
               {cat}
-              {filter === cat && (
-                <motion.div layoutId="cat-indicator" className="absolute bottom-0 left-0 right-0 h-[2px] bg-primary" />
-              )}
+              {filter === cat && <motion.div layoutId="cat-indicator" className="absolute bottom-0 left-0 right-0 h-[2px] bg-primary" />}
             </button>
           ))}
         </div>
 
         <div className="flex gap-3 overflow-x-auto no-scrollbar">
-           {['主题', '形式', '讲师', '时间'].map(f => (
-             <button key={f} className="flex items-center gap-1 bg-[#F2F2F2] px-3 py-1.5 rounded-full text-xs text-slate-500 whitespace-nowrap">
-               {f} <ChevronDown className="w-3 h-3" />
-             </button>
-           ))}
+          {['主题', '形式', '讲师', '时间'].map((item) => (
+            <button key={item} className="flex items-center gap-1 bg-[#F2F2F2] px-3 py-1.5 rounded-full text-xs text-slate-500 whitespace-nowrap">
+              {item} <ChevronDown className="w-3 h-3" />
+            </button>
+          ))}
         </div>
       </section>
 
-      {/* Course List */}
       <section className="space-y-6">
-        {filteredCourses.map((course) => (
-          <motion.article 
-            layout
-            key={course.id}
-            className="group bg-white rounded-xl overflow-hidden border-[0.5px] border-primary/10 shadow-sm p-5"
-          >
-            <div className="flex flex-col gap-3">
-              <div className="flex justify-between items-start">
-                <div className="flex flex-col gap-1">
-                  {course.tag && (
-                    <span className="text-[#7a3512] text-[10px] uppercase font-bold tracking-wider mb-1">
-                      {course.tag}
-                    </span>
-                  )}
-                  <h3 className="text-lg font-serif font-bold text-primary">{course.title}</h3>
-                </div>
-                <span className="text-accent font-bold text-lg whitespace-nowrap ml-2">¥ {course.price}</span>
-              </div>
-              <p className="text-xs text-slate-500 line-clamp-2 leading-relaxed">
-                {course.description}
-              </p>
-              
-              <div className="pt-4 mt-1 border-t border-primary/5 space-y-2">
-                <div className="flex items-center gap-2 text-xs text-slate-400">
-                  <Calendar className="w-3.5 h-3.5" />
-                  <span>{course.date_info}</span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2 text-xs text-slate-400">
-                    <MapPin className="w-3.5 h-3.5" />
-                    <span>{course.location}</span>
+        {loading && <p className="text-center text-sm text-slate-400 py-8">课程加载中...</p>}
+        {!loading &&
+          filteredCourses.map((course) => (
+            <motion.article layout key={course.id} className="group bg-white rounded-xl overflow-hidden border-[0.5px] border-primary/10 shadow-sm">
+              {coverImage(course.image_url) && <img src={coverImage(course.image_url)} alt={course.title} className="w-full aspect-[4/3] object-cover" />}
+              <div className="flex flex-col gap-3 p-5">
+                <div className="flex justify-between items-start">
+                  <div className="flex flex-col gap-1">
+                    {course.tag && <span className="text-[#7a3512] text-[10px] uppercase font-bold tracking-wider mb-1">{course.tag}</span>}
+                    <h3 className="text-lg font-serif font-bold text-primary">{course.title}</h3>
                   </div>
-                  <button 
-                    onClick={() => {
-                      setSelectedCourse(course);
-                      setIsModalOpen(true);
-                    }}
-                    className="text-white bg-primary px-4 py-2 rounded-lg text-xs font-bold active:scale-95 transition-transform"
-                  >
-                    立即报名
-                  </button>
+                  <span className="text-accent font-bold text-lg whitespace-nowrap ml-2">¥ {course.price}</span>
+                </div>
+                <p className="text-xs text-slate-500 line-clamp-2 leading-relaxed">{course.description}</p>
+
+                <div className="pt-4 mt-1 border-t border-primary/5 space-y-2">
+                  <div className="flex items-center gap-2 text-xs text-slate-400">
+                    <Calendar className="w-3.5 h-3.5" />
+                    <span>{course.date_info}</span>
+                  </div>
+                  <div className="flex items-center justify-between gap-3">
+                    <div className="flex items-center gap-2 text-xs text-slate-400 min-w-0">
+                      <MapPin className="w-3.5 h-3.5 shrink-0" />
+                      <span className="truncate">{course.location}</span>
+                    </div>
+                    <button
+                      onClick={() => {
+                        setSelectedCourse(course);
+                        setIsModalOpen(true);
+                      }}
+                      className="text-white bg-primary px-4 py-2 rounded-lg text-xs font-bold active:scale-95 transition-transform shrink-0"
+                    >
+                      立即报名
+                    </button>
+                  </div>
                 </div>
               </div>
-            </div>
-          </motion.article>
-        ))}
+            </motion.article>
+          ))}
+        {!loading && filteredCourses.length === 0 && <p className="text-center text-sm text-slate-400 py-8">暂无匹配课程</p>}
       </section>
 
-      <RegistrationModal 
-        isOpen={isModalOpen} 
-        onClose={() => setIsModalOpen(false)} 
-        course={selectedCourse} 
-      />
+      <RegistrationModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} course={selectedCourse} />
     </div>
   );
 }

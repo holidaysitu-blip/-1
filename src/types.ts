@@ -4,7 +4,7 @@ export interface Course {
   description: string;
   price: number;
   instructor: string;
-  category: '中医养生' | '国学人文' | '美学雅活';
+  category: string;
   image_url: string;
   date_info: string;
   location: string;
