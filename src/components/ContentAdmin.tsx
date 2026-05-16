@@ -42,11 +42,24 @@ type CategoryRow = {
   created_at?: string | null;
 };
 
+type WechatNewsRow = {
+  id?: string;
+  title: string;
+  publishedAt: string;
+  sourceUrl: string;
+  summary: string;
+  content: string;
+  origin?: string;
+  syncedAt?: string;
+  created_at?: string;
+};
+
 type ContentData = {
   courses: CourseRow[];
   cat_links: CatContentRow[];
   market_items: MarketItemRow[];
   categories: CategoryRow[];
+  wechat_news: WechatNewsRow[];
   generated_at: string;
 };
 
@@ -86,6 +99,15 @@ const emptyMarketItem: MarketItemRow = {
 
 const emptyCategory: CategoryRow = { name: '' };
 
+const emptyWechatNews: WechatNewsRow = {
+  title: '',
+  publishedAt: '',
+  sourceUrl: '',
+  summary: '',
+  content: '',
+  origin: 'manual',
+};
+
 function qrImage(url = '') {
   return `https://api.qrserver.com/v1/create-qr-code/?size=220x220&margin=12&data=${encodeURIComponent(url)}`;
 }
@@ -123,14 +145,18 @@ export default function ContentAdmin() {
   const [catDraft, setCatDraft] = useState<CatContentRow>(emptyCatContent);
   const [marketDraft, setMarketDraft] = useState<MarketItemRow>(emptyMarketItem);
   const [categoryDraft, setCategoryDraft] = useState<CategoryRow>(emptyCategory);
+  const [wechatDraft, setWechatDraft] = useState<WechatNewsRow>(emptyWechatNews);
+  const [wechatImportUrl, setWechatImportUrl] = useState('');
   const [editingCourseId, setEditingCourseId] = useState<string | null>(null);
   const [editingCatId, setEditingCatId] = useState<string | null>(null);
   const [editingMarketId, setEditingMarketId] = useState<string | null>(null);
   const [editingCategoryId, setEditingCategoryId] = useState<string | null>(null);
+  const [editingWechatId, setEditingWechatId] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [marketUploading, setMarketUploading] = useState(false);
+  const [syncingWechat, setSyncingWechat] = useState(false);
   const [error, setError] = useState('');
   const [message, setMessage] = useState('');
 
@@ -139,7 +165,7 @@ export default function ContentAdmin() {
       { label: '课程/活动', value: data?.courses.length || 0 },
       { label: '寻猫记内容', value: data?.cat_links.length || 0 },
       { label: '雅集内容', value: data?.market_items.length || 0 },
-      { label: '分类数量', value: data?.categories.length || categoryOptions.length },
+      { label: '公众号消息', value: data?.wechat_news.length || 0 },
     ],
     [data]
   );
@@ -160,7 +186,12 @@ export default function ContentAdmin() {
     setError('');
     try {
       const payload = await contentRequest<ContentData>({ action: 'list' });
-      setData({ ...payload, market_items: payload.market_items || [], categories: payload.categories || categoryOptions.map((name) => ({ id: name, name })) });
+      setData({
+        ...payload,
+        market_items: payload.market_items || [],
+        categories: payload.categories || categoryOptions.map((name) => ({ id: name, name })),
+        wechat_news: payload.wechat_news || [],
+      });
       setOk(true);
       sessionStorage.setItem('zy-content-ok', 'true');
       sessionStorage.setItem('zy-content-password', nextPassword);
@@ -254,6 +285,71 @@ export default function ContentAdmin() {
     }
   }
 
+  async function handleSaveWechatNews(event: FormEvent) {
+    event.preventDefault();
+    setSaving(true);
+    setError('');
+    setMessage('');
+    try {
+      await contentRequest<{ item: WechatNewsRow }>({ action: 'upsertWechatNews', item: { ...wechatDraft, id: editingWechatId || wechatDraft.id } });
+      setMessage(editingWechatId ? '公众号消息已更新，小吴会优先引用这条官方资料' : '公众号消息已新增，小吴会优先引用这条官方资料');
+      setWechatDraft(emptyWechatNews);
+      setEditingWechatId(null);
+      await loadData();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : '公众号消息保存失败');
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  async function handleImportWechatArticle() {
+    if (!wechatImportUrl.trim()) return;
+    setSyncingWechat(true);
+    setError('');
+    setMessage('');
+    try {
+      await contentRequest<{ item: WechatNewsRow }>({ action: 'importWechatArticle', url: wechatImportUrl.trim() });
+      setWechatImportUrl('');
+      setMessage('公众号链接已导入资料库，小吴会优先引用');
+      await loadData();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : '公众号链接导入失败');
+    } finally {
+      setSyncingWechat(false);
+    }
+  }
+
+  async function handleSyncWechatNews() {
+    setSyncingWechat(true);
+    setError('');
+    setMessage('');
+    try {
+      const result = await contentRequest<{ ok: boolean; synced: number; errors?: string[] }>({ action: 'syncWechatNews', count: 20 });
+      setMessage(result.ok ? '公众号 API 同步完成，已更新 ' + result.synced + ' 条消息' : '公众号 API 暂未同步到内容：' + (result.errors || []).join('；'));
+      await loadData();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : '公众号 API 同步失败，请检查 WECHAT_APP_ID / WECHAT_APP_SECRET 或改用链接导入');
+    } finally {
+      setSyncingWechat(false);
+    }
+  }
+
+  async function handleDeleteWechatNews(item: WechatNewsRow) {
+    if (!item.id || !window.confirm('确定删除“' + item.title + '”吗？删除后小吴不会再引用这条资料。')) return;
+    setSaving(true);
+    setError('');
+    try {
+      await contentRequest({ action: 'deleteWechatNews', id: item.id });
+      setMessage('公众号消息已删除');
+      await loadData();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : '公众号消息删除失败');
+    } finally {
+      setSaving(false);
+    }
+  }
+
   async function handleDeleteCourse(course: CourseRow) {
     if (!course.id || !window.confirm(`确定删除「${course.title}」吗？`)) return;
     setSaving(true);
@@ -316,7 +412,7 @@ export default function ContentAdmin() {
   }
 
   async function handleImageUpload(event: ChangeEvent<HTMLInputElement>) {
-    const files = Array.from(event.target.files || []);
+    const files = Array.from(event.target.files || []) as File[];
     if (files.length === 0) return;
     setUploading(true);
     setError('');
@@ -345,7 +441,7 @@ export default function ContentAdmin() {
   }
 
   async function handleMarketImageUpload(event: ChangeEvent<HTMLInputElement>) {
-    const files = Array.from(event.target.files || []);
+    const files = Array.from(event.target.files || []) as File[];
     if (files.length === 0) return;
     setMarketUploading(true);
     setError('');
@@ -389,6 +485,12 @@ export default function ContentAdmin() {
     setEditingMarketId(item.id || null);
     setMarketDraft({ ...emptyMarketItem, ...item, status: item.status || 'published' });
     document.getElementById('market-content-panel')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  function editWechatNews(item: WechatNewsRow) {
+    setEditingWechatId(item.id || null);
+    setWechatDraft({ ...emptyWechatNews, ...item });
+    document.getElementById('wechat-news-panel')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 
   function editCategory(item: CategoryRow) {
@@ -474,6 +576,80 @@ export default function ContentAdmin() {
             </div>
           ))}
         </section>
+
+        <DataPanel title="公众号消息资料库">
+          <div id="wechat-news-panel" className="space-y-5">
+            <div className="grid lg:grid-cols-[1fr_280px] gap-5">
+              <form onSubmit={handleSaveWechatNews} className="grid md:grid-cols-2 gap-4">
+                <Field label="标题">
+                  <input value={wechatDraft.title} onChange={(event) => setWechatDraft({ ...wechatDraft, title: event.target.value })} className="admin-input" placeholder="公众号文章标题" />
+                </Field>
+                <Field label="发布日期">
+                  <input value={wechatDraft.publishedAt} onChange={(event) => setWechatDraft({ ...wechatDraft, publishedAt: event.target.value })} className="admin-input" placeholder="2026-05-16" />
+                </Field>
+                <Field label="来源链接" wide>
+                  <input value={wechatDraft.sourceUrl} onChange={(event) => setWechatDraft({ ...wechatDraft, sourceUrl: event.target.value })} className="admin-input" placeholder="公众号文章链接，可为空" />
+                </Field>
+                <Field label="摘要" wide>
+                  <textarea value={wechatDraft.summary} onChange={(event) => setWechatDraft({ ...wechatDraft, summary: event.target.value })} rows={3} className="admin-input resize-y" />
+                </Field>
+                <Field label="正文资料" wide>
+                  <textarea value={wechatDraft.content} onChange={(event) => setWechatDraft({ ...wechatDraft, content: event.target.value })} rows={8} className="admin-input resize-y" />
+                </Field>
+                <div className="md:col-span-2 flex flex-wrap gap-3">
+                  <button disabled={saving} className="inline-flex items-center justify-center gap-2 bg-primary text-white px-4 py-3 rounded-xl text-sm font-bold disabled:opacity-60">
+                    <Save className="w-4 h-4" />
+                    {saving ? '保存中...' : editingWechatId ? '更新公众号消息' : '新增公众号消息'}
+                  </button>
+                  {editingWechatId && (
+                    <button type="button" onClick={() => { setEditingWechatId(null); setWechatDraft(emptyWechatNews); }} className="inline-flex items-center justify-center gap-2 bg-white border border-primary/10 text-slate-500 px-4 py-3 rounded-xl text-sm font-bold">
+                      <X className="w-4 h-4" />
+                      取消编辑
+                    </button>
+                  )}
+                </div>
+              </form>
+              <aside className="space-y-3">
+                <div className="bg-slate-50 border border-primary/10 rounded-xl p-4 text-sm text-slate-500 leading-relaxed">
+                  小吴会优先引用这里的公众号资料。没有查到官方资料时，才会联网补充并标注需要人工确认。
+                </div>
+                <button type="button" onClick={handleSyncWechatNews} disabled={syncingWechat} className="w-full inline-flex items-center justify-center gap-2 bg-primary text-white px-4 py-3 rounded-xl text-sm font-bold disabled:opacity-60">
+                  <RefreshCw className={`w-4 h-4 ${syncingWechat ? 'animate-spin' : ''}`} />
+                  {syncingWechat ? '同步中...' : '同步公众号 API'}
+                </button>
+                <div className="space-y-2">
+                  <input value={wechatImportUrl} onChange={(event) => setWechatImportUrl(event.target.value)} className="admin-input" placeholder="粘贴公众号文章链接导入" />
+                  <button type="button" onClick={handleImportWechatArticle} disabled={syncingWechat || !wechatImportUrl.trim()} className="w-full inline-flex items-center justify-center gap-2 bg-white border border-primary/10 text-primary px-4 py-3 rounded-xl text-sm font-bold disabled:opacity-60">
+                    <LinkIcon className="w-4 h-4" />
+                    导入链接
+                  </button>
+                </div>
+              </aside>
+            </div>
+
+            <div className="grid md:grid-cols-2 gap-3">
+              {(data?.wechat_news || []).map((item) => (
+                <div key={item.id} className="border border-primary/10 rounded-xl p-4 bg-white">
+                  <h3 className="font-bold text-primary">{item.title}</h3>
+                  <p className="text-xs text-slate-400 mt-1">{item.publishedAt || '未标注日期'} / {item.origin || 'manual'}</p>
+                  <p className="text-xs text-slate-500 mt-3 line-clamp-3">{item.summary || item.content}</p>
+                  {item.sourceUrl && <p className="text-xs text-slate-400 break-all mt-2">{item.sourceUrl}</p>}
+                  <div className="flex justify-end gap-2 mt-4">
+                    <button onClick={() => editWechatNews(item)} className="inline-flex items-center gap-1 px-3 py-2 rounded-lg bg-slate-100 text-slate-600 text-xs font-bold">
+                      <Edit3 className="w-3.5 h-3.5" />
+                      编辑
+                    </button>
+                    <button onClick={() => handleDeleteWechatNews(item)} className="inline-flex items-center gap-1 px-3 py-2 rounded-lg bg-red-50 text-red-600 text-xs font-bold">
+                      <Trash2 className="w-3.5 h-3.5" />
+                      删除
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+            {data?.wechat_news.length === 0 && <Empty text="暂无公众号消息" />}
+          </div>
+        </DataPanel>
 
         <DataPanel title="课程 / 活动分类管理">
           <div id="category-panel" className="grid lg:grid-cols-[1fr_1.2fr] gap-5">

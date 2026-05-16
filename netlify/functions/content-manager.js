@@ -1,4 +1,11 @@
 import { createClient } from '@supabase/supabase-js';
+import {
+  deleteWechatNews,
+  importWechatArticleUrl,
+  listWechatNews,
+  syncWechatNewsFromApi,
+  upsertWechatNews,
+} from './_shared/wechat-news.js';
 
 const SUPABASE_URL = process.env.SUPABASE_URL || 'https://pfxssdnqxtfrpqelbndm.supabase.co';
 const ADMIN_PASSWORD = process.env.CONTENT_ADMIN_PASSWORD || process.env.ADMIN_PASSWORD || 'guwuxuanyexiao';
@@ -458,13 +465,14 @@ export async function handler(event) {
     if (body.password !== ADMIN_PASSWORD) return jsonResponse({ error: '密码错误' }, 401);
 
     if (action === 'list') {
-      const [courses, cat_links, market_items, categories] = await Promise.all([
+      const [courses, cat_links, market_items, categories, wechat_news] = await Promise.all([
         listCourses(supabase),
         listCatLinks(supabase),
         listMarketItems(supabase, true),
         listCategories(supabase),
+        listWechatNews(supabase),
       ]);
-      return jsonResponse({ courses, cat_links, market_items, categories, generated_at: new Date().toISOString() });
+      return jsonResponse({ courses, cat_links, market_items, categories, wechat_news, generated_at: new Date().toISOString() });
     }
 
     if (action === 'upsertCourse') {
@@ -500,6 +508,16 @@ export async function handler(event) {
     if (action === 'upsertCategory') return jsonResponse({ category: await upsertCategory(supabase, body.category) });
     if (action === 'deleteCategory') {
       await deleteCategory(supabase, body.id);
+      return jsonResponse({ ok: true });
+    }
+    if (action === 'upsertWechatNews') return jsonResponse({ item: await upsertWechatNews(supabase, body.item) });
+    if (action === 'importWechatArticle') {
+      const article = await importWechatArticleUrl(body.url);
+      return jsonResponse({ item: await upsertWechatNews(supabase, article) });
+    }
+    if (action === 'syncWechatNews') return jsonResponse(await syncWechatNewsFromApi(supabase, { count: body.count || 20 }));
+    if (action === 'deleteWechatNews') {
+      await deleteWechatNews(supabase, body.id);
       return jsonResponse({ ok: true });
     }
 

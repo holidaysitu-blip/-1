@@ -1,4 +1,5 @@
 import { createClient } from '@supabase/supabase-js';
+import { WECHAT_NEWS_USER, noteToWechatNews } from './_shared/wechat-news.js';
 
 const SUPABASE_URL = process.env.SUPABASE_URL || 'https://pfxssdnqxtfrpqelbndm.supabase.co';
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'guwuxuanyexiao';
@@ -122,6 +123,7 @@ async function loadAdminData(supabase) {
 
   const members = notesResult.data.filter((note) => note.user_id === MEMBER_USER).map(parseMember);
   const market_items = notesResult.data.filter((note) => note.user_id === MARKET_ITEM_USER).map(parseMarketItem);
+  const wechat_news = notesResult.data.filter((note) => note.user_id === WECHAT_NEWS_USER).map(noteToWechatNews);
   const market_favorites = notesResult.data
     .filter((note) => String(note.course_name || '').startsWith(MARKET_FAVORITE_PREFIX))
     .map(parseMarketFavorite);
@@ -129,6 +131,7 @@ async function loadAdminData(supabase) {
     note.user_id !== MEMBER_USER &&
     note.user_id !== CAT_LINK_USER &&
     note.user_id !== MARKET_ITEM_USER &&
+    note.user_id !== WECHAT_NEWS_USER &&
     !String(note.course_name || '').startsWith(MARKET_FAVORITE_PREFIX)
   );
 
@@ -144,13 +147,14 @@ async function loadAdminData(supabase) {
     notes,
     favorites,
     market_items,
+    wechat_news,
     market_favorites,
     generated_at: new Date().toISOString(),
     filters: {
       project: '古吴轩章园',
       hidden_non_project_rows: {
         registrations: registrationsResult.data.length - registrations.length,
-        notes: notesResult.data.length - notes.length - members.length - market_items.length - market_favorites.length,
+        notes: notesResult.data.length - notes.length - members.length - market_items.length - wechat_news.length - market_favorites.length,
         favorites: favoritesResult.data.length - favorites.length,
       },
     },
