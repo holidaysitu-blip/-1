@@ -1,6 +1,5 @@
 import { X } from 'lucide-react';
 import { useState } from 'react';
-import { supabase } from '../lib/supabase';
 import { getCurrentMember } from '../lib/member';
 
 type Props = {
@@ -23,19 +22,22 @@ export default function RegistrationModal({ isOpen, onClose, course }: Props) {
 
     setLoading(true);
 
-    const { error } = await supabase.from('registrations').insert([
-      {
+    const res = await fetch('/api/registrations', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
         user_name: member.name,
         user_phone: member.phone,
         user_id: member.id,
         course_id: course.id,
-        status: 'pending',
-      },
-    ]);
+      }),
+    });
+    const payload = await res.json();
 
     setLoading(false);
 
-    if (error) {
+    if (!res.ok) {
+      console.error(payload.error);
       alert('报名失败，请稍后再试');
       return;
     }

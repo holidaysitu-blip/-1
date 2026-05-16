@@ -398,7 +398,7 @@ function Table({ headers, children }: { headers: string[]; children: ReactNode }
   );
 }
 
-function Th({ children }: { children: ReactNode }) {
+function Th({ children }: { children: ReactNode; key?: string }) {
   return <th className="p-3 text-left font-bold text-primary whitespace-nowrap">{children}</th>;
 }
 

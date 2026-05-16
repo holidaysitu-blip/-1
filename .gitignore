@@ -10,3 +10,7 @@ coverage/
 
 # Local Netlify folder
 .netlify
+
+# Local server persistence
+data/
+uploads/

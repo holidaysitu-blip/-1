@@ -1,7 +1,6 @@
-import { useEffect, useState, type ChangeEvent } from 'react';
+import { useEffect, useState, type ChangeEvent, type ReactNode } from 'react';
 import { AnimatePresence, motion } from 'motion/react';
 import { Book, Bookmark, ChevronRight, Edit3, Gift, ImagePlus, LogOut, Plus, Star, Ticket, Wallet, X } from 'lucide-react';
-import { supabase } from '../lib/supabase';
 import { clearCurrentMember, getCurrentMember, saveCurrentMember, type Member } from '../lib/member';
 import { Note } from '../types';
 
@@ -62,23 +61,23 @@ export default function Profile() {
   async function fetchData() {
     if (!member) return;
     try {
-      if (activeTab === '学习笔记') {
-        const { data } = await supabase.from('notes').select('*').eq('user_id', member.id).order('created_at', { ascending: false });
-        setNotes(data || []);
-      } else if (activeTab === '我的收藏') {
-        const { data } = await supabase.from('favorites').select('*, courses (*)').eq('user_id', member.id).order('created_at', { ascending: false });
-        setFavorites(data || []);
-      } else {
-        const { data } = await supabase.from('registrations').select('*, courses (*)').eq('user_id', member.id).order('created_at', { ascending: false });
-        setRegistrations(data || []);
-      }
+      const res = await fetch('/api/member-data', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ user_id: member.id }),
+      });
+      const payload = await res.json();
+      if (!res.ok) throw new Error(payload.error || 'member data load failed');
+      setNotes(payload.notes || []);
+      setFavorites(payload.favorites || []);
+      setRegistrations(payload.registrations || []);
     } catch (error) {
       console.error(error);
     }
   }
 
   async function handleNoteImageUpload(event: ChangeEvent<HTMLInputElement>) {
-    const files = Array.from(event.target.files || []);
+    const files = Array.from(event.target.files || []) as File[];
     if (files.length === 0) return;
     setUploading(true);
     try {
@@ -116,15 +115,17 @@ export default function Profile() {
 
   async function handleAddNote() {
     if (!member || !newNote.title || !newNote.content) return;
-    const { error } = await supabase.from('notes').insert([
-      {
+    const res = await fetch('/api/notes', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
         title: newNote.title,
         content: serializeNoteContent(newNote.content, newNote.images),
         course_name: newNote.course_name,
         user_id: member.id,
-      },
-    ]);
-    if (error) {
+      }),
+    });
+    if (!res.ok) {
       alert('保存失败，请稍后再试');
       return;
     }
@@ -343,7 +344,7 @@ export default function Profile() {
   );
 }
 
-function ActionStat({ icon, label, value, onClick }: { icon: React.ReactNode; label: string; value: string; onClick: () => void }) {
+function ActionStat({ icon, label, value, onClick }: { icon: ReactNode; label: string; value: string; onClick: () => void }) {
   return (
     <button onClick={onClick} className="bg-white rounded-xl p-4 border border-primary/10 text-left active:scale-95 transition-transform">
       <div className="text-accent mb-3">{icon}</div>
@@ -353,7 +354,7 @@ function ActionStat({ icon, label, value, onClick }: { icon: React.ReactNode; la
   );
 }
 
-function Empty({ icon, text }: { icon: React.ReactNode; text: string }) {
+function Empty({ icon, text }: { icon: ReactNode; text: string }) {
   return (
     <div className="text-center py-12 text-slate-300">
       <div className="mx-auto mb-2 opacity-20 flex justify-center">{icon}</div>
@@ -362,7 +363,7 @@ function Empty({ icon, text }: { icon: React.ReactNode; text: string }) {
   );
 }
 
-function MenuItem({ icon, label, onClick }: { icon: React.ReactNode; label: string; onClick?: () => void }) {
+function MenuItem({ icon, label, onClick }: { icon: ReactNode; label: string; onClick?: () => void }) {
   return (
     <button onClick={onClick} className="w-full flex items-center justify-between p-5 hover:bg-slate-50 transition-colors group">
       <div className="flex items-center gap-4">

@@ -1,7 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { motion } from 'motion/react';
 import { Bookmark, Heart, RefreshCw, ShoppingBag } from 'lucide-react';
-import { supabase } from '../lib/supabase';
 import { getCurrentMember, type Member } from '../lib/member';
 
 type MarketItem = {
@@ -100,12 +99,13 @@ export default function Market() {
   }
 
   async function fetchFavorites(memberId: string) {
-    const { data } = await supabase
-      .from('notes')
-      .select('course_name')
-      .eq('user_id', memberId)
-      .like('course_name', 'market-favorite:%');
-    setFavoriteIds(new Set((data || []).map((row) => String(row.course_name).replace('market-favorite:', ''))));
+    const res = await fetch('/api/market-favorites', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'list', user_id: memberId }),
+    });
+    const payload = await res.json();
+    setFavoriteIds(new Set(payload.ids || []));
   }
 
   async function toggleFavorite(item: MarketItem) {
@@ -114,30 +114,26 @@ export default function Market() {
     const isFavorited = favoriteIds.has(item.id);
     try {
       if (isFavorited) {
-        const { error } = await supabase.from('notes').delete().eq('user_id', member.id).eq('course_name', favoriteKey(item.id));
-        if (error) throw error;
+        const res = await fetch('/api/market-favorites', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ action: 'delete', user_id: member.id, item }),
+        });
+        const payload = await res.json();
+        if (!res.ok) throw new Error(payload.error || 'favorite delete failed');
         setFavoriteIds((current) => {
           const next = new Set(current);
           next.delete(item.id);
           return next;
         });
       } else {
-        const { error } = await supabase.from('notes').insert({
-          user_id: member.id,
-          title: `雅集收藏：${item.name}`,
-          course_name: favoriteKey(item.id),
-          content: JSON.stringify({
-            type: 'market_favorite',
-            item_id: item.id,
-            name: item.name,
-            description: item.description,
-            price: item.price,
-            image_url: item.image_url,
-            image_urls: marketImages(item),
-            tag: item.tag || '',
-          }),
+        const res = await fetch('/api/market-favorites', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ action: 'add', user_id: member.id, item: { ...item, image_urls: marketImages(item) } }),
         });
-        if (error) throw error;
+        const payload = await res.json();
+        if (!res.ok) throw new Error(payload.error || 'favorite save failed');
         setFavoriteIds((current) => new Set(current).add(item.id));
       }
     } catch (error) {

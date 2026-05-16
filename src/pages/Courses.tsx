@@ -1,7 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { motion } from 'motion/react';
 import { Book, Calendar, ChevronDown, MapPin, Search } from 'lucide-react';
-import { supabase } from '../lib/supabase';
 import { Course } from '../types';
 import RegistrationModal from '../components/RegistrationModal';
 
@@ -70,9 +69,10 @@ export default function Courses() {
   useEffect(() => {
     async function fetchCourses() {
       try {
-        const { data, error } = await supabase.from('courses').select('*').order('created_at', { ascending: false });
-        if (error) throw error;
-        setCourses(data && data.length > 0 ? data : mockCourses);
+        const res = await fetch('/api/courses');
+        const payload = await res.json();
+        if (!res.ok) throw new Error(payload.error || 'courses load failed');
+        setCourses(payload.courses && payload.courses.length > 0 ? payload.courses : mockCourses);
       } catch (e) {
         setCourses(mockCourses);
       } finally {

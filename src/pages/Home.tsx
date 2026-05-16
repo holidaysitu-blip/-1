@@ -1,6 +1,7 @@
 import { motion } from 'motion/react';
 import { ArrowRight, BookOpen, Landmark, MapPin, Sparkles } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import type { ReactNode } from 'react';
 
 export default function Home() {
   return (
@@ -82,7 +83,7 @@ export default function Home() {
   );
 }
 
-function InfoTile({ icon, label, text }: { icon: React.ReactNode; label: string; text: string }) {
+function InfoTile({ icon, label, text }: { icon: ReactNode; label: string; text: string }) {
   return (
     <div className="bg-white border border-primary/10 rounded-xl p-3 min-h-[88px]">
       <div className="text-accent mb-2">{icon}</div>
