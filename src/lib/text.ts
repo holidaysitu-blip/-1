@@ -32,3 +32,21 @@ export function cleanCourseOptionText<T extends Record<string, unknown>>(option:
     instructor: cleanText(String(option.instructor || '')),
   };
 }
+
+export function normalizeJumpUrl(value = '') {
+  const raw = String(value || '').trim();
+  if (!raw) return '';
+
+  const miniProgramIndex = raw.indexOf('小程序://');
+  if (miniProgramIndex >= 0) {
+    return `#${raw.slice(miniProgramIndex)}`;
+  }
+
+  const httpMatch = raw.match(/https?:\/\/[^\s，。；]+/i);
+  if (httpMatch) return httpMatch[0];
+
+  if (/^(weixin|alipays|tel|mailto):/i.test(raw)) return raw;
+  if (/^[\w.-]+\.[a-z]{2,}(\/\S*)?$/i.test(raw)) return `https://${raw}`;
+
+  return raw;
+}

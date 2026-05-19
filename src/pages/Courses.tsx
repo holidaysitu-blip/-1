@@ -3,7 +3,7 @@ import { motion } from 'motion/react';
 import { Book, Calendar, MapPin, Search } from 'lucide-react';
 import { Course, CourseOption } from '../types';
 import RegistrationModal from '../components/RegistrationModal';
-import { cleanCourseOptionText, cleanCourseText } from '../lib/text';
+import { cleanCourseOptionText, cleanCourseText, normalizeJumpUrl } from '../lib/text';
 
 type CourseWithOptions = Course & { options?: CourseOption[] };
 
@@ -49,13 +49,6 @@ function coverImage(value = '') {
   return courseImages(value)[0] || '';
 }
 
-function externalUrl(value = '') {
-  const url = value.trim();
-  if (!url) return '';
-  if (/^https?:\/\//i.test(url)) return url;
-  return `https://${url}`;
-}
-
 export default function Courses() {
   const [courses, setCourses] = useState<Course[]>([]);
   const [loading, setLoading] = useState(true);
@@ -91,7 +84,7 @@ export default function Courses() {
   });
 
   async function openRegistration(course: Course) {
-    const jumpUrl = externalUrl(course.registration_url || '');
+    const jumpUrl = normalizeJumpUrl(course.registration_url || '');
     if (jumpUrl) {
       window.location.href = jumpUrl;
       return;
