@@ -39,7 +39,7 @@ export function normalizeJumpUrl(value = '') {
 
   const miniProgramIndex = raw.indexOf('小程序://');
   if (miniProgramIndex >= 0) {
-    return raw.slice(miniProgramIndex);
+    return '';
   }
 
   const httpMatch = raw.match(/https?:\/\/[^\s，。；]+/i);
@@ -49,4 +49,11 @@ export function normalizeJumpUrl(value = '') {
   if (/^[\w.-]+\.[a-z]{2,}(\/\S*)?$/i.test(raw)) return `https://${raw}`;
 
   return raw;
+}
+
+export function normalizeMiniProgramText(value = '') {
+  const raw = String(value || '').trim();
+  const miniProgramIndex = raw.indexOf('小程序://');
+  if (miniProgramIndex < 0) return '';
+  return `#${raw.slice(miniProgramIndex)}`;
 }
