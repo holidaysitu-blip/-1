@@ -3,7 +3,7 @@ import { motion } from 'motion/react';
 import { Book, Calendar, MapPin, Search } from 'lucide-react';
 import { Course, CourseOption } from '../types';
 import RegistrationModal from '../components/RegistrationModal';
-import { cleanCourseOptionText, cleanCourseText, normalizeJumpUrl, normalizeMiniProgramText } from '../lib/text';
+import { cleanCourseOptionText, cleanCourseText } from '../lib/text';
 
 type CourseWithOptions = Course & { options?: CourseOption[] };
 
@@ -84,18 +84,7 @@ export default function Courses() {
   });
 
   async function openRegistration(course: Course) {
-    const miniProgramText = normalizeMiniProgramText(course.registration_url || '');
-    if (miniProgramText) {
-      try {
-        await navigator.clipboard?.writeText(miniProgramText);
-        alert('已复制报名链接，请打开微信粘贴访问。');
-      } catch {
-        alert(`请复制到微信打开：${miniProgramText}`);
-      }
-      return;
-    }
-
-    const jumpUrl = normalizeJumpUrl(course.registration_url || '');
+    const jumpUrl = String(course.registration_url || '').trim();
     if (jumpUrl) {
       window.location.href = jumpUrl;
       return;
