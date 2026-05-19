@@ -2,6 +2,7 @@ import { useEffect, useState, type ChangeEvent, type ReactNode } from 'react';
 import { AnimatePresence, motion } from 'motion/react';
 import { Book, Bookmark, ChevronRight, Edit3, Gift, ImagePlus, LogOut, Plus, Star, Ticket, Wallet, X } from 'lucide-react';
 import { clearCurrentMember, getCurrentMember, saveCurrentMember, type Member } from '../lib/member';
+import { cleanCourseText } from '../lib/text';
 import { Note } from '../types';
 
 const tabs = ['我的报名', '学习笔记', '我的学习', '我的收藏'];
@@ -69,8 +70,8 @@ export default function Profile() {
       const payload = await res.json();
       if (!res.ok) throw new Error(payload.error || 'member data load failed');
       setNotes(payload.notes || []);
-      setFavorites(payload.favorites || []);
-      setRegistrations(payload.registrations || []);
+      setFavorites((payload.favorites || []).map((item: any) => ({ ...item, courses: item.courses ? cleanCourseText(item.courses) : item.courses })));
+      setRegistrations((payload.registrations || []).map((item: any) => ({ ...item, courses: item.courses ? cleanCourseText(item.courses) : item.courses })));
     } catch (error) {
       console.error(error);
     }
@@ -120,7 +121,8 @@ export default function Profile() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         title: newNote.title,
-        content: serializeNoteContent(newNote.content, newNote.images),
+        text: newNote.content,
+        images: newNote.images,
         course_name: newNote.course_name,
         user_id: member.id,
       }),
@@ -249,7 +251,8 @@ export default function Profile() {
                 {learningRows.map((reg) => (
                   <div key={reg.id} className="bg-white p-4 rounded-xl border border-primary/5 shadow-sm">
                     <h4 className="text-sm font-bold text-primary">{reg.courses?.title || '课程'}</h4>
-                    <p className="text-[10px] text-slate-400 mt-1">{reg.courses?.date_info}</p>
+                    <p className="text-[10px] text-slate-400 mt-1">{reg.course_options?.name || reg.courses?.date_info}</p>
+                    {reg.course_options?.date_info && <p className="text-[10px] text-slate-400 mt-1">{reg.course_options.date_info}</p>}
                     <span className={`inline-block mt-3 text-[10px] font-bold px-2 py-1 rounded ${reg.status === 'confirmed' ? 'bg-green-100 text-green-600' : 'bg-orange-100 text-orange-600'}`}>
                       {reg.status === 'confirmed' ? '已通过' : '待审核'}
                     </span>

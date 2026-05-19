@@ -16,6 +16,47 @@ const MARKET_ITEM_USER = 'market-item';
 const CATEGORY_USER = 'content-category';
 const SITE_URL = 'https://cheerly-elf-832745.netlify.app';
 const DEFAULT_CATEGORIES = ['中医养生', '国学人文', '美学雅活', '茶道香道', '琴棋书画', '手作体验', '活动体验'];
+const TEXT_FIXES = [
+  ['涓尰鍏荤敓', '中医养生'],
+  ['鍥藉浜烘枃', '国学人文'],
+  ['缇庡闆呮椿', '美学雅活'],
+  ['鑼堕亾棣欓亾', '茶道香道'],
+  ['鐞存涔︾敾', '琴棋书画'],
+  ['鎵嬩綔浣撻獙', '手作体验'],
+  ['娲诲姩浣撻獙', '活动体验'],
+  ['鍙ゅ惔杞╃珷鍥?', '古吴轩章园'],
+  ['澶滄牎绌洪棿', '夜校空间'],
+  ['路', ' · '],
+];
+
+function cleanText(value = '') {
+  let text = String(value || '');
+  for (const [bad, good] of TEXT_FIXES) {
+    text = text.split(bad).join(good);
+  }
+  return text
+    .replace(/中医[�?]+养?生/g, '中医养生')
+    .replace(/美学[�?]+活/g, '美学雅活')
+    .replace(/魏碑书法[�?]+门/g, '魏碑书法入门')
+    .replace(/章园[�?]+夜校空间/g, '章园 · 夜校空间')
+    .replace(/周[�?]+(?=\s*[0-9])/g, '周六')
+    .replace(/\s*·\s*/g, ' · ')
+    .trim();
+}
+
+function cleanCourse(course = {}) {
+  return {
+    ...course,
+    title: cleanText(course.title),
+    description: cleanText(course.description),
+    instructor: cleanText(course.instructor),
+    category: cleanText(course.category),
+    date_info: cleanText(course.date_info),
+    location: cleanText(course.location),
+    tag: cleanText(course.tag),
+    registration_url: String(course.registration_url || '').trim(),
+  };
+}
 
 function jsonResponse(data, statusCode = 200) {
   return {
@@ -49,15 +90,16 @@ function hasProjectKeyword(...values) {
 
 function sanitizeCourse(course = {}) {
   const payload = {
-    title: String(course.title || '').trim(),
-    description: String(course.description || '').trim(),
+    title: cleanText(course.title),
+    description: cleanText(course.description),
     price: Number(course.price || 0),
-    instructor: String(course.instructor || '').trim(),
-    category: String(course.category || '').trim(),
+    instructor: cleanText(course.instructor),
+    category: cleanText(course.category),
     image_url: String(course.image_url || '').trim(),
-    date_info: String(course.date_info || '').trim(),
-    location: String(course.location || '').trim(),
-    tag: String(course.tag || '').trim() || null,
+    date_info: cleanText(course.date_info),
+    location: cleanText(course.location),
+    tag: cleanText(course.tag) || null,
+    registration_url: String(course.registration_url || '').trim(),
   };
 
   if (!payload.title) throw new Error('请填写标题');
@@ -227,7 +269,7 @@ async function listCourses(supabase) {
   const { data, error } = await supabase.from('courses').select('*').order('created_at', { ascending: false }).limit(200);
   if (error) throw new Error(`读取内容失败：${error.message}`);
 
-  return (data || []).filter((course) =>
+  return (data || []).map(cleanCourse).filter((course) =>
     hasProjectKeyword(course.title, course.description, course.category, course.location, course.tag)
   );
 }
@@ -478,12 +520,16 @@ export async function handler(event) {
     if (action === 'upsertCourse') {
       const payload = sanitizeCourse(body.course);
       const id = String(body.course?.id || '').trim();
-      const query = id
-        ? supabase.from('courses').update(payload).eq('id', id).select('*').single()
-        : supabase.from('courses').insert(payload).select('*').single();
-      const { data, error } = await query;
+      const query = (coursePayload) => id
+        ? supabase.from('courses').update(coursePayload).eq('id', id).select('*').single()
+        : supabase.from('courses').insert(coursePayload).select('*').single();
+      let { data, error } = await query(payload);
+      if (error && /registration_url/i.test(error.message || '')) {
+        const { registration_url, ...fallbackPayload } = payload;
+        ({ data, error } = await query(fallbackPayload));
+      }
       if (error) throw new Error(`保存内容失败：${error.message}`);
-      return jsonResponse({ course: data });
+      return jsonResponse({ course: cleanCourse(data) });
     }
 
     if (action === 'deleteCourse') {

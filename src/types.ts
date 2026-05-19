@@ -9,11 +9,25 @@ export interface Course {
   date_info: string;
   location: string;
   tag?: string;
+  registration_url?: string;
+}
+
+export interface CourseOption {
+  id: string;
+  course_id: string;
+  name: string;
+  date_info: string;
+  instructor: string;
+  price: number;
+  quota: number;
+  status: 'open' | 'closed';
+  created_at?: string;
 }
 
 export interface Registration {
   id?: string;
   course_id: string;
+  course_option_id?: string;
   user_id: string;
   user_name: string;
   user_phone: string;

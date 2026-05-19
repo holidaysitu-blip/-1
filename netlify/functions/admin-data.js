@@ -8,6 +8,18 @@ const MEMBER_USER = 'member-profile';
 const CAT_LINK_USER = 'xunmao-link';
 const MARKET_ITEM_USER = 'market-item';
 const MARKET_FAVORITE_PREFIX = 'market-favorite:';
+const TEXT_FIXES = [
+  ['涓尰鍏荤敓', '中医养生'],
+  ['鍥藉浜烘枃', '国学人文'],
+  ['缇庡闆呮椿', '美学雅活'],
+  ['鑼堕亾棣欓亾', '茶道香道'],
+  ['鐞存涔︾敾', '琴棋书画'],
+  ['鎵嬩綔浣撻獙', '手作体验'],
+  ['娲诲姩浣撻獙', '活动体验'],
+  ['鍙ゅ惔杞╃珷鍥?', '古吴轩章园'],
+  ['澶滄牎绌洪棿', '夜校空间'],
+  ['路', ' · '],
+];
 
 function jsonResponse(data, statusCode = 200) {
   return {
@@ -40,6 +52,35 @@ async function safeSelect(table, query) {
 function hasProjectKeyword(...values) {
   const text = values.filter(Boolean).join(' ');
   return PROJECT_KEYWORDS.some((keyword) => text.includes(keyword));
+}
+
+function cleanText(value = '') {
+  let text = String(value || '');
+  for (const [bad, good] of TEXT_FIXES) {
+    text = text.split(bad).join(good);
+  }
+  return text
+    .replace(/中医[�?]+养?生/g, '中医养生')
+    .replace(/美学[�?]+活/g, '美学雅活')
+    .replace(/魏碑书法[�?]+门/g, '魏碑书法入门')
+    .replace(/章园[�?]+夜校空间/g, '章园 · 夜校空间')
+    .replace(/周[�?]+(?=\s*[0-9])/g, '周六')
+    .replace(/\s*·\s*/g, ' · ')
+    .trim();
+}
+
+function cleanCourse(course = {}) {
+  if (!course) return course;
+  return {
+    ...course,
+    title: cleanText(course.title),
+    description: cleanText(course.description),
+    instructor: cleanText(course.instructor),
+    category: cleanText(course.category),
+    date_info: cleanText(course.date_info),
+    location: cleanText(course.location),
+    tag: cleanText(course.tag),
+  };
 }
 
 function parseJson(value, fallback = {}) {
@@ -111,7 +152,7 @@ async function loadAdminData(supabase) {
     safeSelect('favorites', supabase.from('favorites').select('*, courses(id, title)').order('created_at', { ascending: false }).limit(500)),
   ]);
 
-  const courses = coursesResult.data.filter((course) =>
+  const courses = coursesResult.data.map(cleanCourse).filter((course) =>
     hasProjectKeyword(course.title, course.description, course.category, course.location, course.tag)
   );
   const courseIds = new Set(courses.map((course) => course.id));
@@ -119,7 +160,7 @@ async function loadAdminData(supabase) {
   const registrations = registrationsResult.data.filter((row) => {
     if (row.course_id && courseIds.has(row.course_id)) return true;
     return hasProjectKeyword(row.user_name, row.courses?.title);
-  });
+  }).map((row) => ({ ...row, courses: cleanCourse(row.courses) }));
 
   const members = notesResult.data.filter((note) => note.user_id === MEMBER_USER).map(parseMember);
   const market_items = notesResult.data.filter((note) => note.user_id === MARKET_ITEM_USER).map(parseMarketItem);
@@ -138,7 +179,7 @@ async function loadAdminData(supabase) {
   const favorites = favoritesResult.data.filter((favorite) => {
     if (favorite.course_id && courseIds.has(favorite.course_id)) return true;
     return hasProjectKeyword(favorite.courses?.title);
-  });
+  }).map((favorite) => ({ ...favorite, courses: cleanCourse(favorite.courses) }));
 
   return {
     members,

@@ -5,20 +5,32 @@ type ChatMessage = {
 
 async function callQwen(prompt: string, history: ChatMessage[] = []): Promise<string> {
   try {
+    const now = new Date();
     const res = await fetch('/.netlify/functions/qwen', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ prompt, history }),
+      body: JSON.stringify({
+        prompt,
+        history,
+        client_time: now.toISOString(),
+        client_time_text: now.toLocaleString('zh-CN', { hour12: false, weekday: 'long' }),
+        client_timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+      }),
     });
 
-    const data = await res.json();
+    const data = await res.json().catch(() => ({}));
 
-    return data.text || data.answer || data.message || data.reply || data.error || '抱歉，小吴暂时无法回复，请稍后再试。';
+    if (!res.ok || data.error) {
+      console.error('Qwen API Error:', data.error || res.statusText);
+      return '小吴当前没有成功连接到千问接口，请检查 QWEN_API_KEY / DASHSCOPE_API_KEY 和服务端日志。';
+    }
+
+    return data.text || data.answer || data.message || data.reply || '千问接口已返回，但没有生成有效内容。';
   } catch (error) {
     console.error('Qwen Error:', error);
-    return '抱歉，小吴暂时遇到了一点问题，请稍后再试。';
+    return '小吴当前没有成功连接到千问接口，请检查网络、函数部署或服务端配置。';
   }
 }
 

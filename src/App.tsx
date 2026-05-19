@@ -24,6 +24,7 @@ export default function App() {
         <Route path="/" element={<MemberGate><Layout /></MemberGate>}>
           <Route index element={<Home />} />
           <Route path="courses" element={<Courses />} />
+          <Route path="courses/:id" element={<Courses />} />
           <Route path="market" element={<Market />} />
           <Route path="profile" element={<Profile />} />
           <Route path="chat" element={<Chat />} />

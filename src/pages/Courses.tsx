@@ -1,45 +1,36 @@
 import { useEffect, useMemo, useState } from 'react';
 import { motion } from 'motion/react';
-import { Book, Calendar, ChevronDown, MapPin, Search } from 'lucide-react';
-import { Course } from '../types';
+import { Book, Calendar, MapPin, Search } from 'lucide-react';
+import { Course, CourseOption } from '../types';
 import RegistrationModal from '../components/RegistrationModal';
+import { cleanCourseOptionText, cleanCourseText } from '../lib/text';
 
-const mockCourses: Course[] = [
+type CourseWithOptions = Course & { options?: CourseOption[] };
+
+const fallbackCourses: Course[] = [
   {
-    id: '1',
-    title: '中药课堂：草木入门与日常养生',
-    description: '从常见本草开始，认识药食同源的生活智慧，学习适合日常的香囊、茶饮与养护方法。',
+    id: 'fallback-tcm',
+    title: '中医养生入门课',
+    description: '从日常草木、茶饮与节气养护开始，学习适合日常生活的养生方法。',
     price: 498,
     instructor: '古吴轩章园导师',
     category: '中医养生',
     image_url: '/assets/tcm-class.png',
     date_info: '周六 14:00-16:00',
-    location: '古吴轩章园 · 听松阁',
-    tag: '养生精选',
+    location: '古吴轩章园 · 夜校空间',
+    tag: '夜校精选',
   },
   {
-    id: '2',
-    title: '书写课堂：笔墨入门与临帖练习',
-    description: '从执笔、用墨和线条开始，在一笔一画中安顿心绪，体会传统书写的节奏与气韵。',
-    price: 498,
+    id: 'fallback-calligraphy',
+    title: '书写课堂：笔墨入门',
+    description: '从执笔、用墨和线条开始，在一笔一画中安顿心绪。',
+    price: 398,
     instructor: '书写导师',
     category: '国学人文',
     image_url: '/assets/calligraphy-class.jpg',
     date_info: '周日 10:00-12:00',
-    location: '古吴轩章园 · 书香斋',
+    location: '古吴轩章园 · 书香空间',
     tag: '新课',
-  },
-  {
-    id: '3',
-    title: '古吴轩章园综合体验课',
-    description: '30+门精品课程持续开放，涵盖琴棋书画、花道香道、茶道、陶艺、传统服饰与咖啡培训等方向。',
-    price: 498,
-    instructor: '古吴轩章园',
-    category: '美学雅活',
-    image_url: '/assets/night-school.png',
-    date_info: '工作日晚间 / 周末滚动开课',
-    location: '古吴轩章园 · 夜校空间',
-    tag: '热门',
   },
 ];
 
@@ -58,12 +49,19 @@ function coverImage(value = '') {
   return courseImages(value)[0] || '';
 }
 
+function externalUrl(value = '') {
+  const url = value.trim();
+  if (!url) return '';
+  if (/^https?:\/\//i.test(url)) return url;
+  return `https://${url}`;
+}
+
 export default function Courses() {
   const [courses, setCourses] = useState<Course[]>([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState('全部');
   const [query, setQuery] = useState('');
-  const [selectedCourse, setSelectedCourse] = useState<Course | null>(null);
+  const [selectedCourse, setSelectedCourse] = useState<CourseWithOptions | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
@@ -72,9 +70,11 @@ export default function Courses() {
         const res = await fetch('/api/courses');
         const payload = await res.json();
         if (!res.ok) throw new Error(payload.error || 'courses load failed');
-        setCourses(payload.courses && payload.courses.length > 0 ? payload.courses : mockCourses);
-      } catch (e) {
-        setCourses(mockCourses);
+        const nextCourses = payload.courses && payload.courses.length > 0 ? payload.courses : fallbackCourses;
+        setCourses(nextCourses.map(cleanCourseText));
+      } catch (error) {
+        console.error(error);
+        setCourses(fallbackCourses);
       } finally {
         setLoading(false);
       }
@@ -90,16 +90,31 @@ export default function Courses() {
     return matchesCategory && text.includes(query.trim().toLowerCase());
   });
 
+  async function openRegistration(course: Course) {
+    const jumpUrl = externalUrl(course.registration_url || '');
+    if (jumpUrl) {
+      window.location.href = jumpUrl;
+      return;
+    }
+
+    setSelectedCourse(course);
+    setIsModalOpen(true);
+    try {
+      const res = await fetch(`/api/courses/${course.id}`);
+      const payload = await res.json();
+      if (!res.ok) throw new Error(payload.error || 'course detail load failed');
+      setSelectedCourse({ ...cleanCourseText(payload.course), options: (payload.options || []).map(cleanCourseOptionText) });
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
   return (
     <div className="px-6 py-6 pb-24 relative">
       <div className="flex items-center justify-between mb-8 px-2">
         <div className="flex items-center gap-2">
           <Book className="w-5 h-5 text-primary" />
-          <h2 className="text-xl font-bold font-serif text-primary">古吴轩章园</h2>
-        </div>
-        <div className="flex items-center gap-4 text-slate-400">
-          <Search className="w-5 h-5" />
-          <div className="w-5 h-5 rounded-full border border-slate-300" />
+          <h2 className="text-xl font-bold font-serif text-primary">古吴轩章园课程</h2>
         </div>
       </div>
 
@@ -110,7 +125,7 @@ export default function Courses() {
             type="text"
             value={query}
             onChange={(event) => setQuery(event.target.value)}
-            placeholder="搜索课程、讲师或分类..."
+            placeholder="搜索课程、老师或分类..."
             className="w-full bg-[#F2F2F2] border-none rounded-xl py-3 pl-10 pr-4 text-sm focus:ring-0 placeholder:text-slate-400"
           />
         </div>
@@ -129,14 +144,6 @@ export default function Courses() {
             </button>
           ))}
         </div>
-
-        <div className="flex gap-3 overflow-x-auto no-scrollbar">
-          {['主题', '形式', '讲师', '时间'].map((item) => (
-            <button key={item} className="flex items-center gap-1 bg-[#F2F2F2] px-3 py-1.5 rounded-full text-xs text-slate-500 whitespace-nowrap">
-              {item} <ChevronDown className="w-3 h-3" />
-            </button>
-          ))}
-        </div>
       </section>
 
       <section className="space-y-6">
@@ -144,15 +151,17 @@ export default function Courses() {
         {!loading &&
           filteredCourses.map((course) => (
             <motion.article layout key={course.id} className="group bg-white rounded-xl overflow-hidden border-[0.5px] border-primary/10 shadow-sm">
-              {coverImage(course.image_url) && <img src={coverImage(course.image_url)} alt={course.title} className="w-full aspect-[4/3] object-cover" />}
+              <button type="button" onClick={() => openRegistration(course)} className="block w-full text-left active:scale-[0.99] transition-transform">
+                {coverImage(course.image_url) && <img src={coverImage(course.image_url)} alt={course.title} className="w-full aspect-[4/3] object-cover" />}
+              </button>
               <div className="flex flex-col gap-3 p-5">
-                <div className="flex justify-between items-start">
+                <button type="button" onClick={() => openRegistration(course)} className="flex justify-between items-start text-left active:scale-[0.99] transition-transform">
                   <div className="flex flex-col gap-1">
                     {course.tag && <span className="text-[#7a3512] text-[10px] uppercase font-bold tracking-wider mb-1">{course.tag}</span>}
                     <h3 className="text-lg font-serif font-bold text-primary">{course.title}</h3>
                   </div>
-                  <span className="text-accent font-bold text-lg whitespace-nowrap ml-2">¥ {course.price}</span>
-                </div>
+                  <span className="text-accent font-bold text-lg whitespace-nowrap ml-2">¥{course.price} 起</span>
+                </button>
                 <p className="text-xs text-slate-500 line-clamp-2 leading-relaxed">{course.description}</p>
 
                 <div className="pt-4 mt-1 border-t border-primary/5 space-y-2">
@@ -166,13 +175,10 @@ export default function Courses() {
                       <span className="truncate">{course.location}</span>
                     </div>
                     <button
-                      onClick={() => {
-                        setSelectedCourse(course);
-                        setIsModalOpen(true);
-                      }}
+                      onClick={() => openRegistration(course)}
                       className="text-white bg-primary px-4 py-2 rounded-lg text-xs font-bold active:scale-95 transition-transform shrink-0"
                     >
-                      立即报名
+                      {course.registration_url ? '查看' : '报名'}
                     </button>
                   </div>
                 </div>

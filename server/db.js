@@ -42,12 +42,26 @@ export function initDb() {
       date_info text,
       location text,
       tag text,
+      registration_url text,
+      created_at text not null
+    );
+
+    create table if not exists course_options (
+      id text primary key,
+      course_id text not null,
+      name text not null,
+      date_info text,
+      instructor text,
+      price real default 0,
+      quota integer default 0,
+      status text default 'open',
       created_at text not null
     );
 
     create table if not exists registrations (
       id text primary key,
       course_id text,
+      course_option_id text,
       user_id text,
       user_name text not null,
       user_phone text not null,
@@ -77,6 +91,16 @@ export function initDb() {
       updated_at text not null
     );
   `);
+
+  const registrationColumns = db.prepare('pragma table_info(registrations)').all().map((column) => column.name);
+  if (!registrationColumns.includes('course_option_id')) {
+    db.exec('alter table registrations add column course_option_id text');
+  }
+
+  const courseColumns = db.prepare('pragma table_info(courses)').all().map((column) => column.name);
+  if (!courseColumns.includes('registration_url')) {
+    db.exec('alter table courses add column registration_url text');
+  }
 }
 
 export function one(sql, params = {}) {
