@@ -84,7 +84,9 @@ export default function Courses() {
   });
 
   async function openRegistration(course: Course) {
-    const jumpUrl = String(course.registration_url || '').trim();
+    const rawJumpUrl = String(course.registration_url || '').trim();
+    const miniProgramIndex = rawJumpUrl.indexOf('\u5c0f\u7a0b\u5e8f://');
+    const jumpUrl = miniProgramIndex >= 0 ? rawJumpUrl.slice(miniProgramIndex) : rawJumpUrl;
     if (jumpUrl) {
       window.location.href = jumpUrl;
       return;
