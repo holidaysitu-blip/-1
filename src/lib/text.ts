@@ -39,7 +39,7 @@ export function normalizeJumpUrl(value = '') {
 
   const miniProgramIndex = raw.indexOf('小程序://');
   if (miniProgramIndex >= 0) {
-    return `#${raw.slice(miniProgramIndex)}`;
+    return raw.slice(miniProgramIndex);
   }
 
   const httpMatch = raw.match(/https?:\/\/[^\s，。；]+/i);

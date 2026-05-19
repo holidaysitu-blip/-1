@@ -171,7 +171,7 @@ export default function Courses() {
                       onClick={() => openRegistration(course)}
                       className="text-white bg-primary px-4 py-2 rounded-lg text-xs font-bold active:scale-95 transition-transform shrink-0"
                     >
-                      {course.registration_url ? '查看' : '报名'}
+                      报名
                     </button>
                   </div>
                 </div>
